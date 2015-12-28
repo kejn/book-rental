@@ -1,4 +1,4 @@
-package pl.edu.pwr.config;
+package pl.edu.pwr.test.config;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,16 +19,16 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@Import(DatabaseConfig.class)
+@Import(DatabaseTestConfig.class)
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = { "pl.edu.pwr.dao" })
-public class DataAccessConfig {
+public class DataAccessTestConfig {
 
 	public static final String PERSISTANCE_UNIT_NAME = "bookRentalPersistance";
 	private static final String packagesToScan = "pl.edu.pwr.entity";
 
 	@Autowired
-	private DatabaseConfig databaseConfig;
+	private DatabaseTestConfig databaseConfig;
 
 	@Autowired
 	private JpaVendorAdapter hibernateJpaVendorAdapter;

@@ -1,4 +1,4 @@
-package pl.edu.pwr.config;
+package pl.edu.pwr.test.config;
 
 import java.sql.SQLException;
 
@@ -16,9 +16,9 @@ import oracle.jdbc.pool.OracleDataSource;
 
 @Configuration
 @PropertySource(value = "classpath:config/oracle.properties", ignoreResourceNotFound = false)
-public class DatabaseConfig {
+public class DatabaseTestConfig {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseTestConfig.class);
 
 	@Value("${oracle.user}")
 	private String user;
