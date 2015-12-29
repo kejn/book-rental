@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.edu.pwr</groupId>
 	<artifactId>book-rental</artifactId>
-	<version>${app.version}</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>jpa</module>
