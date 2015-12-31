@@ -19,6 +19,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.entity.AuthorEntity;
 import pl.edu.pwr.entity.BookEntity;
+import pl.edu.pwr.exception.NotNullIdException;
 import pl.edu.pwr.test.config.DataAccessDaoTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,7 +28,7 @@ public class BookDaoImplTest {
 
 	@Autowired
 	private BookDao bookDao;
-
+	
 	@Test
 	public void shouldFindBookById() {
 		// given
@@ -60,6 +61,50 @@ public class BookDaoImplTest {
 		final Set<AuthorEntity> authors = books.get(0).getAuthors();
 		assertNotNull(authors);
 		assertTrue(authors.stream().anyMatch(author -> author.matchFirstOrLastName(authorPrefix)));
+	}
+	
+	@Test
+	public void shouldSaveBookWithNullId() {
+		// given
+		final AuthorEntity author = new AuthorEntity(null, "Adam", "Pawlak");
+		BookEntity book = new BookEntity(null, "Książka do zapisania z id=null", author);
+		// when
+		book = bookDao.save(book);
+		// then
+		assertNotNull(book);
+		assertNotNull(book.getId());
+	}
+	
+	@Test(expected = NotNullIdException.class)
+	public void shouldThrowNotNullIdExceptionOnSave() {
+		// given
+		final AuthorEntity author = new AuthorEntity(null, "Tomasz", "Mazur");
+		BookEntity book = new BookEntity(BigDecimal.ONE, "Książka do zapisania z id!=null", author);
+		// when
+		book = bookDao.save(book);
+	}
+	
+	@Test
+	public void shouldDeleteBookById() {
+		// given
+		final BigDecimal id = new BigDecimal("2");
+		// when
+		bookDao.delete(id);
+		final BookEntity book = bookDao.findOne(id);
+		// then
+		assertTrue(book == null);
+	}
+	
+	@Test
+	public void shouldDeleteBook() {
+		// given
+		final BigDecimal id = new BigDecimal("3");
+		final BookEntity book = bookDao.findOne(id);
+		// when
+		bookDao.delete(book);
+		boolean bookExistsInDatabase = bookDao.exists(id);
+		// then
+		assertFalse(bookExistsInDatabase);
 	}
 
 }

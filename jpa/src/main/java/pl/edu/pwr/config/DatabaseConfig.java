@@ -47,7 +47,7 @@ public class DatabaseConfig {
 		dataSource.setUser(user);
 		dataSource.setPassword(password);
 		dataSource.setURL(url);
-		logger.info("Setting DB connection parameters: " + toString() + ".");
+		logger.info("Setting DB connection parameters: {}.", this.toString());
 		return dataSource;
 	}
 	

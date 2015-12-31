@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.pwr.annotation.NullableId;
 import pl.edu.pwr.config.DataAccessConfig;
 import pl.edu.pwr.dao.Dao;
 
@@ -24,16 +25,43 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
 	protected Class<T> domainClass;
 	
 	@Override
+	public void delete(K id) {
+		entityManager.remove(getOne(id));
+	}
+	
+	@Override
+	public void delete(T entity) {
+		entityManager.remove(entityManager.merge(entity));
+	}
+	
+	@Override
+	public boolean exists(K id) {
+		return findOne(id) != null;
+	}
+	
+	@Override
 	public T findOne(K id) {
 		return entityManager.find(getDomainClass() , id);
 	}
+
+	@Override
+	public T getOne(K id) {
+		return entityManager.getReference(getDomainClass() , id);
+	}
 	
+	@Override
+	@NullableId
+	public T save(T entity) {
+		entityManager.persist(entity);
+		return entity;
+	}
+
 	@SuppressWarnings("unchecked")
 	protected Class<T> getDomainClass() {
 		if(domainClass == null) {
 			ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 			domainClass = (Class<T>) type.getActualTypeArguments()[0]; // [0] - T, [1] - K
-			logger.debug("domainClass initialized with [%s]", domainClass.getName());
+			logger.debug("domainClass initialized with {}", domainClass.getName());
 		}
 		return domainClass;
 	}

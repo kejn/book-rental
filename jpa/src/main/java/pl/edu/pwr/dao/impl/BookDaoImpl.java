@@ -3,7 +3,7 @@ package pl.edu.pwr.dao.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
@@ -13,7 +13,7 @@ import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.entity.QBookEntity;
 
-@Repository
+@Component
 public class BookDaoImpl extends AbstractDao<BookEntity, BigDecimal> implements BookDao {
 
 	@Override
@@ -38,5 +38,5 @@ public class BookDaoImpl extends AbstractDao<BookEntity, BigDecimal> implements 
 		builder.or(bookEntity.authors.any().lastName.startsWithIgnoreCase(author));
 		return query.from(bookEntity).where(builder).list(bookEntity);
 	}
-
+	
 }

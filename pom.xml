@@ -15,7 +15,7 @@
 	<description>Web-App allowing users to rent books online as signed in or anonymous user.</description>
 
 	<properties>
-    <app.version>1.0</app.version>
+		<app.version>1.0</app.version>
 		<java.version>1.8</java.version>
 		<spring.framework.version>4.2.3.RELEASE</spring.framework.version>
 		<spring.data.jpa.version>1.9.1.RELEASE</spring.data.jpa.version>
@@ -108,6 +108,12 @@
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-jpa</artifactId>
 				<version>${spring.data.jpa.version}</version>
+			</dependency>
+			<!-- AOP -->
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>1.8.7</version>
 			</dependency>
 			<!-- used for JPA custom type registration of joda-time -->
 			<dependency>
