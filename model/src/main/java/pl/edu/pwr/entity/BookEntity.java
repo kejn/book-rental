@@ -24,6 +24,9 @@ import pl.edu.pwr.common.IdAware;
 @Table(name = BookEntity.tableName)
 public class BookEntity implements IdAware<BigDecimal> {
 
+	public static final String referenceBookIdColumnName = "BOOK_ID";
+	public static final String referenceBookAuthorTableName = "BOOK_AUTHOR";
+	public static final String referenceBookLibraryTableName = "BOOK_LIBRARY";
 	protected static final String tableName = "BOOKS";
 	private static final String sequenceName = "BOOKS_SEQ";
 
@@ -36,10 +39,16 @@ public class BookEntity implements IdAware<BigDecimal> {
 	private String title;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "BOOK_AUTHOR", joinColumns = {
-			@JoinColumn(name = "BOOK_ID", updatable = false, referencedColumnName = "ID") }, inverseJoinColumns = {
-					@JoinColumn(name = "AUTHOR_ID", updatable = false, referencedColumnName = "ID") })
+	@JoinTable(name = referenceBookAuthorTableName, joinColumns = {
+			@JoinColumn(name = referenceBookIdColumnName, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = AuthorEntity.referenceAuthorIdColumnName, updatable = false) })
 	private Set<AuthorEntity> authors;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "BOOK_LIBRARY", joinColumns = {
+			@JoinColumn(name = "BOOK_ID", updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "LIBRARY_ID", updatable = false) })
+	private Set<LibraryEntity> libraries;
 
 	protected BookEntity() {
 	}
@@ -53,30 +62,31 @@ public class BookEntity implements IdAware<BigDecimal> {
 	 *            book title
 	 * @param authors
 	 *            set of authors who written this book
+	 * @param libraries
+	 *            set of libraries where this book is available
 	 */
-	public BookEntity(BigDecimal id, String title, Set<AuthorEntity> authors) {
+	public BookEntity(BigDecimal id, String title, Set<AuthorEntity> authors, Set<LibraryEntity> libraries) {
 		this.id = id;
 		this.title = title;
 		this.authors = authors;
+		this.libraries = libraries;
 	}
 
 	/**
-	 * Creates entity by assigning member fields.
+	 * Creates entity by assigning member fields <b>id</b> and <b>title</b>.
+	 * After that it is required to call {@link #addAuthors(AuthorEntity...)}
+	 * and {@link #addLibraries(LibraryEntity...)} methods.
 	 * 
 	 * @param id
 	 *            id in database
 	 * @param title
 	 *            book title
-	 * @param authors
-	 *            authors of AuthorEntity type separated by commas
 	 */
-	public BookEntity(BigDecimal id, String title, AuthorEntity... authors) {
+	public BookEntity(BigDecimal id, String title) {
 		this.id = id;
 		this.title = title;
 		this.authors = new HashSet<>();
-		for (AuthorEntity author : authors) {
-			this.authors.add(author);
-		}
+		this.libraries = new HashSet<>();
 	}
 
 	@Override
@@ -106,8 +116,28 @@ public class BookEntity implements IdAware<BigDecimal> {
 		return authors;
 	}
 
+	public void addAuthors(AuthorEntity... authors) {
+		for (AuthorEntity author : authors) {
+			this.authors.add(author);
+		}
+	}
+
 	public void setAuthors(Set<AuthorEntity> authors) {
 		this.authors = authors;
+	}
+
+	public void addLibraries(LibraryEntity... libraries) {
+		for (LibraryEntity library : libraries) {
+			this.libraries.add(library);
+		}
+	}
+
+	public Set<LibraryEntity> getLibraries() {
+		return libraries;
+	}
+
+	public void setLibraries(Set<LibraryEntity> libraries) {
+		this.libraries = libraries;
 	}
 
 }

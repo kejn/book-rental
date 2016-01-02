@@ -19,6 +19,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.entity.AuthorEntity;
 import pl.edu.pwr.entity.BookEntity;
+import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.exception.NotNullIdException;
 import pl.edu.pwr.test.config.DataAccessDaoTestConfig;
 
@@ -46,6 +47,7 @@ public class BookDaoImplTest {
 		// then
 		List<BookEntity> books = bookDao.findBooksByTitle(titleFragment);
 		// then
+		assertNotNull(books);
 		assertFalse(books.isEmpty());
 		assertEquals("Pierwsza książka", books.get(0).getTitle());
 	}
@@ -67,7 +69,10 @@ public class BookDaoImplTest {
 	public void shouldSaveBookWithNullId() {
 		// given
 		final AuthorEntity author = new AuthorEntity(null, "Adam", "Pawlak");
-		BookEntity book = new BookEntity(null, "Książka do zapisania z id=null", author);
+		final LibraryEntity library = new LibraryEntity(null, "Biblioteka #1 do zapisania z książką");
+		BookEntity book = new BookEntity(null, "Książka do zapisania z id=null");
+		book.addAuthors(author);
+		book.addLibraries(library);
 		// when
 		book = bookDao.save(book);
 		// then
@@ -79,7 +84,10 @@ public class BookDaoImplTest {
 	public void shouldThrowNotNullIdExceptionOnSave() {
 		// given
 		final AuthorEntity author = new AuthorEntity(null, "Tomasz", "Mazur");
-		BookEntity book = new BookEntity(BigDecimal.ONE, "Książka do zapisania z id!=null", author);
+		final LibraryEntity library = new LibraryEntity(null, "Biblioteka #2 do zapisania z książką");
+		BookEntity book = new BookEntity(BigDecimal.ONE, "Książka do zapisania z id!=null");
+		book.addAuthors(author);
+		book.addLibraries(library);
 		// when
 		book = bookDao.save(book);
 	}
@@ -105,6 +113,19 @@ public class BookDaoImplTest {
 		boolean bookExistsInDatabase = bookDao.exists(id);
 		// then
 		assertFalse(bookExistsInDatabase);
+	}
+	
+	@Test
+	public void shouldFindBooksByLibraryName() {
+		// given
+		final String libraryName = "wrocław";
+		// when
+		List<BookEntity> books = bookDao.findBooksByLibraryName(libraryName);
+		// then
+		assertNotNull(books);
+		assertFalse(books.isEmpty());
+		assertNotNull(books.get(0).getLibraries());
+		assertTrue(books.get(0).getLibraries().stream().anyMatch(library -> library.getName().equals("Biblioteka we Wrocławiu")));
 	}
 
 }

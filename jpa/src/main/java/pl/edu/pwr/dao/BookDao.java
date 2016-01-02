@@ -21,4 +21,11 @@ public interface BookDao extends Dao<BookEntity, BigDecimal>{
 	 */
 	public List<BookEntity> findBooksByAuthor(String author);
 
+	/**
+	 * Searches database for books matching given library name.
+	 * @param libraryName library name to match search results
+	 * @return list of book entities found in database matching above criteria.
+	 */
+	public List<BookEntity> findBooksByLibraryName(String libraryName);
+
 }

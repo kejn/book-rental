@@ -16,27 +16,53 @@ import pl.edu.pwr.entity.QBookEntity;
 @Component
 public class BookDaoImpl extends AbstractDao<BookEntity, BigDecimal> implements BookDao {
 
+	/**
+	 * JPA query
+	 */
+	private JPAQuery query;
+
+	/**
+	 * Let create queries by choosing columns like BookEntity member fields.
+	 */
+	private QBookEntity bookEntity;
+
+	private void prepareQueryVariables() {
+		query = new JPAQuery(entityManager);
+		bookEntity = QBookEntity.bookEntity;
+	}
+
 	@Override
+	// @NotNullArg
 	public List<BookEntity> findBooksByTitle(String bookTitle) {
-		if(bookTitle == null) {
+		if (bookTitle == null) {
 			throw new NullArgumentException("bookTitle");
 		}
-		JPAQuery query = new JPAQuery(entityManager);
-		QBookEntity bookEntity = QBookEntity.bookEntity;
+		prepareQueryVariables();
 		return query.from(bookEntity).where(bookEntity.title.containsIgnoreCase(bookTitle)).list(bookEntity);
 	}
 
 	@Override
+	// @NotNullArg
 	public List<BookEntity> findBooksByAuthor(String author) {
-		if(author == null) {
+		if (author == null) {
 			throw new NullArgumentException("author");
 		}
-		JPAQuery query = new JPAQuery(entityManager);
-		QBookEntity bookEntity = QBookEntity.bookEntity;
+		prepareQueryVariables();
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.or(bookEntity.authors.any().firstName.startsWithIgnoreCase(author));
 		builder.or(bookEntity.authors.any().lastName.startsWithIgnoreCase(author));
 		return query.from(bookEntity).where(builder).list(bookEntity);
 	}
-	
+
+	@Override
+	// @NotNullArg
+	public List<BookEntity> findBooksByLibraryName(String libraryName) {
+		if (libraryName == null) {
+			throw new NullArgumentException("libraryName");
+		}
+		prepareQueryVariables();
+		return query.from(bookEntity).where(bookEntity.libraries.any().name.containsIgnoreCase(libraryName))
+				.list(bookEntity);
+	}
+
 }
