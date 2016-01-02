@@ -8,61 +8,42 @@ import org.springframework.stereotype.Component;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 
-import net.logstash.logback.encoder.org.apache.commons.lang.NullArgumentException;
 import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.entity.QBookEntity;
 
 @Component
-public class BookDaoImpl extends AbstractDao<BookEntity, BigDecimal> implements BookDao {
+public class BookDaoImpl extends AbstractDao<BookEntity, QBookEntity, BigDecimal> implements BookDao {
 
-	/**
-	 * JPA query
-	 */
-	private JPAQuery query;
-
-	/**
-	 * Let create queries by choosing columns like BookEntity member fields.
-	 */
-	private QBookEntity bookEntity;
-
-	private void prepareQueryVariables() {
+	@Override
+	protected void prepareQueryVariables() {
 		query = new JPAQuery(entityManager);
-		bookEntity = QBookEntity.bookEntity;
+		qEntity = QBookEntity.bookEntity;
 	}
 
 	@Override
-	// @NotNullArg
 	public List<BookEntity> findBooksByTitle(String bookTitle) {
-		if (bookTitle == null) {
-			throw new NullArgumentException("bookTitle");
-		}
+		checkIfArgumentIsNull(bookTitle, "bookTitle");
 		prepareQueryVariables();
-		return query.from(bookEntity).where(bookEntity.title.containsIgnoreCase(bookTitle)).list(bookEntity);
+		return query.from(qEntity).where(qEntity.title.containsIgnoreCase(bookTitle)).list(qEntity);
 	}
 
 	@Override
-	// @NotNullArg
 	public List<BookEntity> findBooksByAuthor(String author) {
-		if (author == null) {
-			throw new NullArgumentException("author");
-		}
+		checkIfArgumentIsNull(author, "author");
 		prepareQueryVariables();
 		BooleanBuilder builder = new BooleanBuilder();
-		builder.or(bookEntity.authors.any().firstName.startsWithIgnoreCase(author));
-		builder.or(bookEntity.authors.any().lastName.startsWithIgnoreCase(author));
-		return query.from(bookEntity).where(builder).list(bookEntity);
+		builder.or(qEntity.authors.any().firstName.startsWithIgnoreCase(author));
+		builder.or(qEntity.authors.any().lastName.startsWithIgnoreCase(author));
+		return query.from(qEntity).where(builder).list(qEntity);
 	}
 
 	@Override
-	// @NotNullArg
 	public List<BookEntity> findBooksByLibraryName(String libraryName) {
-		if (libraryName == null) {
-			throw new NullArgumentException("libraryName");
-		}
+		checkIfArgumentIsNull(libraryName, "libraryName");
 		prepareQueryVariables();
-		return query.from(bookEntity).where(bookEntity.libraries.any().name.containsIgnoreCase(libraryName))
-				.list(bookEntity);
+		return query.from(qEntity).where(qEntity.libraries.any().name.containsIgnoreCase(libraryName))
+				.list(qEntity);
 	}
 
 }

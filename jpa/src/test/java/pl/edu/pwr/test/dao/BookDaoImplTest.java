@@ -81,7 +81,7 @@ public class BookDaoImplTest {
 	}
 	
 	@Test(expected = NotNullIdException.class)
-	public void shouldThrowNotNullIdExceptionOnSave() {
+	public void shouldThrowNotNullIdExceptionOnBookSave() {
 		// given
 		final AuthorEntity author = new AuthorEntity(null, "Tomasz", "Mazur");
 		final LibraryEntity library = new LibraryEntity(null, "Biblioteka #2 do zapisania z książką");
