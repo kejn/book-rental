@@ -42,7 +42,7 @@ public class UserEntity {
 	@JoinTable(name = referenceUserBookTableName, joinColumns = {
 			@JoinColumn(name = referenceUserIdColumnName, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = BookEntity.referenceBookIdColumnName, updatable = false) })
-	private Set<BookEntity> books;
+	private Set<BookEntity> books = new HashSet<>();
 	
 	protected UserEntity() {
 	}
@@ -58,7 +58,6 @@ public class UserEntity {
 		this.id = id;
 		this.name = name;
 		this.password = password;
-		this.books = new HashSet<>();
 	}
 	
 	public void addBooks(BookEntity... books) {

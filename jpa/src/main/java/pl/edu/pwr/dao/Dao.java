@@ -15,4 +15,6 @@ public interface Dao<T, K extends Serializable> {
 	public T getOne(K id);
 
 	public T save(T entity);
+
+	public T update(T entity);
 }

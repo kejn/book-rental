@@ -43,15 +43,15 @@ public class BookEntity implements IdAware<BigDecimal> {
 	@JoinTable(name = referenceBookAuthorTableName, joinColumns = {
 			@JoinColumn(name = referenceBookIdColumnName, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = AuthorEntity.referenceAuthorIdColumnName, updatable = false) })
-	private Set<AuthorEntity> authors;
+	private Set<AuthorEntity> authors = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH, CascadeType.REMOVE })
 	@JoinTable(name = "BOOK_LIBRARY", joinColumns = {
 			@JoinColumn(name = "BOOK_ID", updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "LIBRARY_ID", updatable = false) })
-	private Set<LibraryEntity> libraries;
-
+	private Set<LibraryEntity> libraries = new HashSet<>();
+	
 	protected BookEntity() {
 	}
 
@@ -87,10 +87,8 @@ public class BookEntity implements IdAware<BigDecimal> {
 	public BookEntity(BigDecimal id, String title) {
 		this.id = id;
 		this.title = title;
-		this.authors = new HashSet<>();
-		this.libraries = new HashSet<>();
 	}
-	
+
 	public void addAuthors(AuthorEntity... authors) {
 		for (AuthorEntity author : authors) {
 			this.authors.add(author);
@@ -106,7 +104,8 @@ public class BookEntity implements IdAware<BigDecimal> {
 	@Override
 	public String toString() {
 		return "@BookEntity(id [" + id + "], title [" + title + "], authors ["
-				+ authors.stream().map(a -> a.stringValue()).collect(Collectors.joining(", ")) + "])";
+				+ authors.stream().map(a -> a.stringValue()).collect(Collectors.joining(", ")) + "], libraries ["
+				+ libraries.stream().map(l -> l.getName()).collect(Collectors.joining(", ")) +"])";
 	}
 
 	@Override

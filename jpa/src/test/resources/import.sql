@@ -26,3 +26,4 @@ insert into BOOK_LIBRARY (book_id, library_id) values (2, 2);
 insert into BOOK_LIBRARY (book_id, library_id) values (3, 3);
 
 insert into USERS (id, name, password) values (null, 'user', 'sup3R$ecre7P4$$word');
+insert into USERS (id, name, password) values (null, 'userUpdateCheck', '12345678');

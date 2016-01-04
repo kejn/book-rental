@@ -41,6 +41,16 @@ public class BookDaoImplTest {
 	}
 
 	@Test
+	public void shouldExistBookWithGivenId() {
+		// given
+		final BigDecimal bookId = BigDecimal.ONE;
+		// when
+		boolean exists = bookDao.exists(bookId);
+		// then
+		assertTrue(exists);
+	}
+
+	@Test
 	public void shouldFindBookByTitle() {
 		// given
 		final String titleFragment = "pierwsza";
@@ -92,6 +102,9 @@ public class BookDaoImplTest {
 		book = bookDao.save(book);
 	}
 	
+	/**
+	 * !!! depends on {@link #shouldFindBookById()}
+	 */
 	@Test
 	public void shouldDeleteBookById() {
 		// given
@@ -103,6 +116,9 @@ public class BookDaoImplTest {
 		assertTrue(book == null);
 	}
 	
+	/**
+	 * !!! depends on {@link #shouldExistBookWithGivenId()}
+	 */
 	@Test
 	public void shouldDeleteBook() {
 		// given

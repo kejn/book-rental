@@ -83,6 +83,12 @@ public abstract class AbstractDao<T, Q, K extends Serializable> implements Dao<T
 		return entity;
 	}
 
+	@Override
+	public T update(T entity) {
+		checkIfArgumentIsNull(entity, "entity");
+		return entityManager.merge(entity);
+	}
+
 	@SuppressWarnings("unchecked")
 	protected Class<T> getDomainClass() {
 		if (domainClass == null) {
