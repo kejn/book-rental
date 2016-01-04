@@ -25,7 +25,7 @@ public class LibraryEntity implements IdAware<BigDecimal> {
 	@SequenceGenerator(name = sequenceName, sequenceName = sequenceName, allocationSize = 1, initialValue = 1)
 	private BigDecimal id;
 
-	@Column
+	@Column(nullable = false)
 	private String name;
 
 	protected LibraryEntity() {

@@ -37,7 +37,11 @@ public abstract class AbstractDao<T, Q, K extends Serializable> implements Dao<T
 	 */
 	protected abstract void prepareQueryVariables();
 	
-	protected void checkIfArgumentIsNull(String argument, String argumentName) {
+	protected void createJPAQuery() {
+		query = new JPAQuery(entityManager);
+	}
+	
+	protected void checkIfArgumentIsNull(Object argument, String argumentName) {
 		if (argument == null) {
 			if(argumentName == null) {
 				throw new NullArgumentException("argumentName");
@@ -45,6 +49,7 @@ public abstract class AbstractDao<T, Q, K extends Serializable> implements Dao<T
 			throw new NullArgumentException(argumentName);
 		}		
 	}
+	
 
 	@Override
 	public void delete(K id) {

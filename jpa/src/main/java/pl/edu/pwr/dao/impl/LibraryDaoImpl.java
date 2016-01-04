@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-
 import pl.edu.pwr.dao.LibraryDao;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.entity.QLibraryEntity;
@@ -16,7 +14,7 @@ public class LibraryDaoImpl extends AbstractDao<LibraryEntity, QLibraryEntity, B
 
 	@Override
 	protected void prepareQueryVariables() {
-		query = new JPAQuery(entityManager);
+		createJPAQuery();
 		qEntity = QLibraryEntity.libraryEntity;		
 	}
 

@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
 
 import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.entity.BookEntity;
@@ -17,7 +16,7 @@ public class BookDaoImpl extends AbstractDao<BookEntity, QBookEntity, BigDecimal
 
 	@Override
 	protected void prepareQueryVariables() {
-		query = new JPAQuery(entityManager);
+		createJPAQuery();
 		qEntity = QBookEntity.bookEntity;
 	}
 

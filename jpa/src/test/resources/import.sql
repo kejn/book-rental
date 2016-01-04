@@ -1,6 +1,7 @@
 create or replace TRIGGER BOOKS_TRG before insert on BOOKS for each row begin if (inserting and :new.id is null) then select BOOKS_SEQ.NEXTVAL into :new.id from SYS.DUAL; end if; end; ;
 create or replace TRIGGER AUTHORS_TRG before insert on AUTHORS for each row begin if (inserting and :new.id is null) then select AUTHORS_SEQ.NEXTVAL into :new.id from SYS.DUAL; end if; end; ;
 create or replace TRIGGER LIBRARIES_TRG before insert on LIBRARIES for each row begin if (inserting and :new.id is null) then select LIBRARIES_SEQ.NEXTVAL into :new.id from SYS.DUAL; end if; end; ;
+create or replace TRIGGER USERS_TRG before insert on USERS for each row begin if (inserting and :new.id is null) then select USERS_SEQ.NEXTVAL into :new.id from SYS.DUAL; end if; end; ;
 
 insert into BOOKS (id, title) values (null, 'Pierwsza książka');
 insert into BOOKS (id, title) values (null, 'Książka do usunięcia #1');
@@ -23,3 +24,5 @@ insert into LIBRARIES (id, name) values (null, 'Biblioteka w Warszawie');
 insert into BOOK_LIBRARY (book_id, library_id) values (1, 1);
 insert into BOOK_LIBRARY (book_id, library_id) values (2, 2);
 insert into BOOK_LIBRARY (book_id, library_id) values (3, 3);
+
+insert into USERS (id, name, password) values (null, 'user', 'sup3R$ecre7P4$$word');

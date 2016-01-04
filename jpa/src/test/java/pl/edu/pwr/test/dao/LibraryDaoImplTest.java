@@ -39,13 +39,13 @@ public class LibraryDaoImplTest {
 	@Test
 	public void shouldFindLibraryByName(){
 		// given
-		final String libraryName = "w poznaniu";
+		final String libraryName = "we wrocławiu";
 		// when
 		List<LibraryEntity> libraries = libraryDao.findLibrariesByName(libraryName);
 		// then
 		assertNotNull(libraries);
 		assertFalse(libraries.isEmpty());
-		assertEquals("Biblioteka w Poznaniu", libraries.get(0).getName());
+		assertEquals("Biblioteka we Wrocławiu", libraries.get(0).getName());
 	}
 	
 	@Test
