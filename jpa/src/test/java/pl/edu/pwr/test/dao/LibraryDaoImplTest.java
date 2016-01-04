@@ -17,15 +17,15 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import pl.edu.pwr.dao.LibraryDao;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.exception.NotNullIdException;
-import pl.edu.pwr.test.config.DataAccessDaoTestConfig;
+import pl.edu.pwr.test.config.DataAccessTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DataAccessDaoTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = DataAccessTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class LibraryDaoImplTest {
 
 	@Autowired
 	private LibraryDao libraryDao;
-	
+
 	@Test
 	public void shouldFindLibraryById() {
 		// given
@@ -35,9 +35,9 @@ public class LibraryDaoImplTest {
 		// then
 		assertNotNull(library);
 	}
-	
+
 	@Test
-	public void shouldFindLibraryByName(){
+	public void shouldFindLibraryByName() {
 		// given
 		final String libraryName = "we wrocławiu";
 		// when
@@ -47,26 +47,26 @@ public class LibraryDaoImplTest {
 		assertFalse(libraries.isEmpty());
 		assertEquals("Biblioteka we Wrocławiu", libraries.get(0).getName());
 	}
-	
+
 	@Test
-	public void shouldSaveLibraryWithNullId(){
+	public void shouldSaveLibraryWithNullId() {
 		// given
 		LibraryEntity library = new LibraryEntity(null, "Biblioteka #1 do zapisania");
 		// when
 		library = libraryDao.save(library);
 		// then
 		assertNotNull(library);
-		assertNotNull(library.getId());		
+		assertNotNull(library.getId());
 	}
 
 	@Test(expected = NotNullIdException.class)
-	public void shouldThrowNotNullIdExceptionOnLibrarySave(){
+	public void shouldThrowNotNullIdExceptionOnLibrarySave() {
 		// given
 		LibraryEntity library = new LibraryEntity(BigDecimal.ONE, "Biblioteka #2 do zapisania");
 		// when
 		library = libraryDao.save(library);
 	}
-	
+
 	@Test
 	public void shouldFindAllLibraries() {
 		// when

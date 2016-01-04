@@ -28,5 +28,4 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		return query.from(qEntity).where(builder).singleResult(qEntity);
 	}
 
-
 }

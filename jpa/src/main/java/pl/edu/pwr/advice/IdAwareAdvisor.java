@@ -20,7 +20,7 @@ public class IdAwareAdvisor {
 
 	private void logBeforeAdvice(JoinPoint joinPoint, Object object) {
 		logger.info("Advice before {}.{}() method - arg0 [{}]", joinPoint.getTarget().getClass().getSimpleName(),
-				joinPoint.getSignature().getName(), object.toString());
+		    joinPoint.getSignature().getName(), object.toString());
 	}
 
 	private void logAfterAdvice() {
@@ -35,24 +35,20 @@ public class IdAwareAdvisor {
 	public void nullableIdMethodExecution(Object object, NullableId nullableId) {
 	}
 
-//	@Pointcut(value = "anyMethodInPackage() && args(object,..) && @annotation(notNullArg)", argNames = "object,notNullArg")
-//	public void notNullArgMethodExecution(Object object, NotNullArg notNullArg) {
-//	}
-
 	/**
-	 * Called before method annotated with <b>nullableId</b> annotation is
-	 * called. Checks if its IdAware argument contains unassigned (null) member
-	 * field <b>id</b>
+	 * Called before method annotated with <b>nullableId</b> annotation is called.
+	 * Checks if its IdAware argument contains unassigned (null) member field
+	 * <b>id</b>
 	 *
 	 * @param joinPoint
-	 *            join point. let determine eg. method name before which this
-	 *            method is executed
+	 *          join point. let determine eg. method name before which this method
+	 *          is executed
 	 *
 	 * @param object
-	 *            first argument the annotated method was called with
+	 *          first argument the annotated method was called with
 	 * 
 	 * @param nullableId
-	 *            NullableId annotation wrapping method being called
+	 *          NullableId annotation wrapping method being called
 	 */
 	@Before("nullableIdMethodExecution(object,nullableId)")
 	public void beforeNullableId(JoinPoint joinPoint, Object object, NullableId nullableId) throws Throwable {
@@ -68,48 +64,12 @@ public class IdAwareAdvisor {
 	 * Checks if idAware has assigned <b>id</b> member field
 	 * 
 	 * @param idAware
-	 *            some IdAware instance
+	 *          some IdAware instance
 	 */
 	private void checkNotNullId(IdAware<?> idAware) {
 		if (idAware.getId() != null) {
 			throw new NotNullIdException();
 		}
 	}
-	
-	/**
-	 * 
-	 * Called before method annotated with <b>notNullStringObject</b> annotation
-	 * is called. Checks if its String argument is unassigned (null)
-	 *
-	 * @param joinPoint
-	 *            join point. let determine eg. method name before which this
-	 *            method is executed
-	 *
-	 * @param object
-	 *            first argument the annotated method was called with
-	 * 
-	 * @param nullableId
-	 *            NullableId annotation wrapping method being called
-	 */
-//	@Before(value = "notNullArgMethodExecution(object,notNullArg)", argNames = "object,notNullArg")
-//	public void beforeNotNullArg(JoinPoint joinPoint, Object object, NotNullArg notNullArg) throws Throwable {
-//		logBeforeAdvice(joinPoint, object);
-//		checkNullArgument(object, joinPoint);
-//		logAfterAdvice();
-//	}
 
-	/**
-	 * Checks if <b>object</b> argument is unassigned (null)
-	 * 
-	 * @param object
-	 *            argument to be validated
-	 * @param joinPoint
-	 *            join point forwarded from parent method
-	 */
-//	private void checkNullArgument(Object object, JoinPoint joinPoint) {
-//		if (object == null) {
-//			String argName = ((CodeSignature) joinPoint.getSignature()).getParameterNames()[0];
-//			throw new NullArgumentException(argName);
-//		}
-//	}
 }

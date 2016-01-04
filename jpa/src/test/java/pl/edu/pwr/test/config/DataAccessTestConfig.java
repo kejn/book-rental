@@ -7,5 +7,5 @@ import pl.edu.pwr.config.DataAccessConfig;
 
 @Configuration
 @Import(DataAccessConfig.class)
-public class DataAccessDaoTestConfig {
+public class DataAccessTestConfig {
 }

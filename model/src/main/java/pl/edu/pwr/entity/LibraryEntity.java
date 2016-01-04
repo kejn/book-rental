@@ -32,7 +32,6 @@ public class LibraryEntity implements IdAware<BigDecimal> {
 	}
 
 	public LibraryEntity(BigDecimal id, String name) {
-		super();
 		this.id = id;
 		this.name = name;
 	}

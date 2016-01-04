@@ -21,15 +21,15 @@ import pl.edu.pwr.entity.AuthorEntity;
 import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.exception.NotNullIdException;
-import pl.edu.pwr.test.config.DataAccessDaoTestConfig;
+import pl.edu.pwr.test.config.DataAccessTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DataAccessDaoTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = DataAccessTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class BookDaoImplTest {
 
 	@Autowired
 	private BookDao bookDao;
-	
+
 	@Test
 	public void shouldFindBookById() {
 		// given
@@ -54,7 +54,7 @@ public class BookDaoImplTest {
 	public void shouldFindBookByTitle() {
 		// given
 		final String titleFragment = "pierwsza";
-		// then
+		// when
 		List<BookEntity> books = bookDao.findBooksByTitle(titleFragment);
 		// then
 		assertNotNull(books);
@@ -74,7 +74,7 @@ public class BookDaoImplTest {
 		assertNotNull(authors);
 		assertTrue(authors.stream().anyMatch(author -> author.matchFirstOrLastName(authorPrefix)));
 	}
-	
+
 	@Test
 	public void shouldSaveBookWithNullId() {
 		// given
@@ -89,7 +89,7 @@ public class BookDaoImplTest {
 		assertNotNull(book);
 		assertNotNull(book.getId());
 	}
-	
+
 	@Test(expected = NotNullIdException.class)
 	public void shouldThrowNotNullIdExceptionOnBookSave() {
 		// given
@@ -101,7 +101,7 @@ public class BookDaoImplTest {
 		// when
 		book = bookDao.save(book);
 	}
-	
+
 	/**
 	 * !!! depends on {@link #shouldFindBookById()}
 	 */
@@ -115,7 +115,7 @@ public class BookDaoImplTest {
 		// then
 		assertTrue(book == null);
 	}
-	
+
 	/**
 	 * !!! depends on {@link #shouldExistBookWithGivenId()}
 	 */
@@ -130,7 +130,7 @@ public class BookDaoImplTest {
 		// then
 		assertFalse(bookExistsInDatabase);
 	}
-	
+
 	@Test
 	public void shouldFindBooksByLibraryName() {
 		// given
@@ -141,7 +141,8 @@ public class BookDaoImplTest {
 		assertNotNull(books);
 		assertFalse(books.isEmpty());
 		assertNotNull(books.get(0).getLibraries());
-		assertTrue(books.get(0).getLibraries().stream().anyMatch(library -> library.getName().equals("Biblioteka we Wrocławiu")));
+		assertTrue(
+		    books.get(0).getLibraries().stream().anyMatch(library -> library.getName().equals("Biblioteka we Wrocławiu")));
 	}
 
 }

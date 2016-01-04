@@ -11,7 +11,7 @@ import pl.edu.pwr.entity.QLibraryEntity;
 
 @Component
 public class LibraryDaoImpl extends AbstractDao<LibraryEntity, QLibraryEntity, BigDecimal> implements LibraryDao {
-	
+
 	@Override
 	protected void setQEntity() {
 		qEntity = QLibraryEntity.libraryEntity;

@@ -40,8 +40,7 @@ public class BookDaoImpl extends AbstractDao<BookEntity, QBookEntity, BigDecimal
 	public List<BookEntity> findBooksByLibraryName(String libraryName) {
 		checkIfArgumentIsNull(libraryName, "libraryName");
 		prepareQueryVariables();
-		return query.from(qEntity).where(qEntity.libraries.any().name.containsIgnoreCase(libraryName))
-				.list(qEntity);
+		return query.from(qEntity).where(qEntity.libraries.any().name.containsIgnoreCase(libraryName)).list(qEntity);
 	}
 
 }

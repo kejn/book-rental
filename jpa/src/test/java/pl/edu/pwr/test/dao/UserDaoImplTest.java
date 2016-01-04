@@ -19,17 +19,17 @@ import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.dao.UserDao;
 import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.entity.UserEntity;
-import pl.edu.pwr.test.config.DataAccessDaoTestConfig;
+import pl.edu.pwr.test.config.DataAccessTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DataAccessDaoTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = DataAccessTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class UserDaoImplTest {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(UserDaoImplTest.class);
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private BookDao bookDao;
 
@@ -42,7 +42,7 @@ public class UserDaoImplTest {
 		// then
 		assertNotNull(user);
 	}
-	
+
 	@Test
 	public void shouldFindUserEqualToNameIgnoreCaseAndVerifyPasswordCaseSensitive() {
 		// given
@@ -55,10 +55,10 @@ public class UserDaoImplTest {
 		assertEquals(userName.toLowerCase(), user.getName().toLowerCase());
 		assertEquals(password, user.getPassword());
 	}
-	
-	
+
 	/**
-	 * !!! depends on {@link #shouldFindUserById()} and BookDaoImplTest.shouldFindBookById()
+	 * !!! depends on {@link #shouldFindUserById()} and
+	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()}
 	 */
 	@Test
 	public void shouldUpdateUserWithNewBook() {
@@ -74,5 +74,5 @@ public class UserDaoImplTest {
 		assertFalse(user.getBooks().isEmpty());
 		assertEquals(1, user.getBooks().size());
 	}
-	
+
 }

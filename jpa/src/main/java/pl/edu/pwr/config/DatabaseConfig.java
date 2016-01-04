@@ -17,7 +17,7 @@ import oracle.jdbc.pool.OracleDataSource;
 @Configuration
 @PropertySource(value = "classpath:config/oracle.properties", ignoreResourceNotFound = false)
 public class DatabaseConfig {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
 
 	@Value("${oracle.user}")
@@ -29,18 +29,21 @@ public class DatabaseConfig {
 	@Value("${oracle.url}")
 	private String url;
 
-	/** 
-	 * Allows to parse values using @Value("${variable.in.properties.file}") before other Spring beans are created.
-	 * <br>
+	/**
+	 * Allows to parse values using @Value("${variable.in.properties.file}")
+	 * before other Spring beans are created. <br>
 	 * <b>IMPORTANT!</b> It has to be <code>static</code>.
-	 * @see <a href="http://www.javacodegeeks.com/2013/07/spring-bean-and-propertyplaceholderconfigurer.html">
-	 * http://www.javacodegeeks.com/2013/07/spring-bean-and-propertyplaceholderconfigurer.html</a>
+	 * 
+	 * @see <a href=
+	 *      "http://www.javacodegeeks.com/2013/07/spring-bean-and-propertyplaceholderconfigurer.html">
+	 *      http://www.javacodegeeks.com/2013/07/spring-bean-and-
+	 *      propertyplaceholderconfigurer.html</a>
 	 */
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
 		return new PropertySourcesPlaceholderConfigurer();
 	}
-	
+
 	@Bean
 	public DataSource dataSource() throws SQLException {
 		OracleDataSource dataSource = new OracleDataSource();
@@ -50,10 +53,22 @@ public class DatabaseConfig {
 		logger.info("Setting DB connection parameters: {}.", this.toString());
 		return dataSource;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "user [" + user + "], password [" + password + "], url [" + url + "]";
 	}
-	
+
+	public String getUser() {
+		return user;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
 }

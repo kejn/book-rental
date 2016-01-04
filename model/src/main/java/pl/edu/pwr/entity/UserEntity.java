@@ -25,25 +25,25 @@ public class UserEntity {
 	public static final String referenceUserBookTableName = "USER_BOOK";
 	protected static final String tableName = "USERS";
 	private static final String sequenceName = "USERS_SEQ";
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequenceName)
 	@SequenceGenerator(name = sequenceName, sequenceName = sequenceName, allocationSize = 1, initialValue = 1)
 	private BigDecimal id;
-	
-	@Column(unique=true, nullable = false)
+
+	@Column(unique = true, nullable = false)
 	private String name;
-	
+
 	@Column(nullable = false)
 	private String password;
-	
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH, CascadeType.REMOVE })
+	    CascadeType.REFRESH, CascadeType.REMOVE })
 	@JoinTable(name = referenceUserBookTableName, joinColumns = {
-			@JoinColumn(name = referenceUserIdColumnName, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = BookEntity.referenceBookIdColumnName, updatable = false) })
+	    @JoinColumn(name = referenceUserIdColumnName, updatable = false) }, inverseJoinColumns = {
+	        @JoinColumn(name = BookEntity.referenceBookIdColumnName, updatable = false) })
 	private Set<BookEntity> books = new HashSet<>();
-	
+
 	protected UserEntity() {
 	}
 
@@ -53,15 +53,15 @@ public class UserEntity {
 		this.password = password;
 		this.books = books;
 	}
-	
+
 	public UserEntity(BigDecimal id, String name, String password) {
 		this.id = id;
 		this.name = name;
 		this.password = password;
 	}
-	
+
 	public void addBooks(BookEntity... books) {
-		for(BookEntity book : books) {
+		for (BookEntity book: books) {
 			this.books.add(book);
 		}
 	}

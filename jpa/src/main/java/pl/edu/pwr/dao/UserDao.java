@@ -11,9 +11,9 @@ public interface UserDao extends Dao<UserEntity, BigDecimal> {
 	 * verifies if given password matches the one assigned to this certain user.
 	 * 
 	 * @param userName
-	 *            user name to match search result
+	 *          user name to match search result
 	 * @param password
-	 *            password to matches the one assigned to this certain user
+	 *          password to matches the one assigned to this certain user
 	 * @return user entity found in database matching above criteria or
 	 *         <b>null</b> otherwise.
 	 */

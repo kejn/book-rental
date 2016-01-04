@@ -62,7 +62,7 @@ public class DataAccessConfig {
 		eMFactory.setPackagesToScan(packagesToScan);
 		return eMFactory;
 	}
-	
+
 	@Bean
 	public PropertiesFactoryBean hibernateProperties() {
 		PropertiesFactoryBean properties = new PropertiesFactoryBean();

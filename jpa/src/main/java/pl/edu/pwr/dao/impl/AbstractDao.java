@@ -20,7 +20,8 @@ import pl.edu.pwr.config.DataAccessConfig;
 import pl.edu.pwr.dao.Dao;
 
 /**
- * Abstract instance of Data Access Object
+ * Abstract instance of Data Access Object.
+ * 
  * @author KNIEMCZY
  *
  * @param <T> type of entity
@@ -42,28 +43,27 @@ public abstract class AbstractDao<T, Q extends EntityPathBase<?>, K extends Seri
 	protected Q qEntity;
 
 	/**
-	 * Creates a new JPAQuery and initializes qEntity. Call this method
-	 * before any <b>query.from(qEntity)</b> usage.
+	 * Creates a new JPAQuery and initializes qEntity. Call this method before any
+	 * <b>query.from(qEntity)</b> usage.
 	 */
 	protected void prepareQueryVariables() {
 		query = new JPAQuery(entityManager);
 		setQEntity();
 	}
-	
+
 	/**
-	 * Should set qEntity to generated QClass.class
+	 * Should set qEntity using generated QClass.Class public field.
 	 */
 	protected abstract void setQEntity();
-	
+
 	protected void checkIfArgumentIsNull(Object argument, String argumentName) {
 		if (argument == null) {
-			if(argumentName == null) {
+			if (argumentName == null) {
 				throw new NullArgumentException("argumentName");
 			}
 			throw new NullArgumentException(argumentName);
-		}		
+		}
 	}
-	
 
 	@Override
 	public void delete(K id) {
@@ -114,10 +114,8 @@ public abstract class AbstractDao<T, Q extends EntityPathBase<?>, K extends Seri
 	protected Class<T> getDomainClass() {
 		if (domainClass == null) {
 			ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-			domainClass = (Class<T>) type.getActualTypeArguments()[0]; // [0] -
-																		// T,
-																		// [1] -
-																		// K
+			// [0] - T, [1] - Q, [2] - K
+			domainClass = (Class<T>) type.getActualTypeArguments()[0];
 			logger.debug("domainClass initialized with {}", domainClass.getName());
 		}
 		return domainClass;

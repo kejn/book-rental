@@ -20,6 +20,7 @@
 		<spring.framework.version>4.2.3.RELEASE</spring.framework.version>
 		<spring.data.jpa.version>1.9.1.RELEASE</spring.data.jpa.version>
 		<junit.version>4.12</junit.version>
+		<mockito.core.version>1.10.19</mockito.core.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- <oracle.system.path>E:\ORACLE\OracleUser\product\12.1.0\dbhome_1\jdbc\lib\ojdbc6.jar</oracle.system.path> -->
 		<oracle.system.path>C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib\ojdbc6.jar</oracle.system.path>
@@ -68,6 +69,10 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -156,6 +161,13 @@
 				<version>${spring.framework.version}</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>${mockito.core.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<!-- ORACLE -->
 			<dependency>
 				<groupId>com.oracle</groupId>
 				<artifactId>ojdbc6</artifactId>

@@ -8,14 +8,14 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 @Configuration
 public class ThymeleafConfig {
-	
+
 	private static final String prefix = "/WEB-INF/templates/";
 	private static final String suffix = ".html";
 	private static final String templateMode = "HTML5";
 	private static final String characterEncoding = "UTF-8";
 	private static final boolean cacheable = false;
 	private static final boolean cache = false;
-	
+
 	@Bean
 	public ThymeleafViewResolver viewResolver() {
 		ThymeleafViewResolver resolver = new ThymeleafViewResolver();
@@ -24,7 +24,7 @@ public class ThymeleafConfig {
 		resolver.setCharacterEncoding(characterEncoding);
 		return resolver;
 	}
-	
+
 	@Bean
 	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine engine = new SpringTemplateEngine();
@@ -42,5 +42,5 @@ public class ThymeleafConfig {
 		resolver.setCacheable(cacheable);
 		return resolver;
 	}
-	
+
 }

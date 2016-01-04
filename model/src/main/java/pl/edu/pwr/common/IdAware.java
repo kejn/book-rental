@@ -8,8 +8,7 @@ import java.io.Serializable;
  * 
  * @author KNIEMCZY
  *
- * @param <K>
- *            type of <b>id</b> member field
+ * @param <K> type of <b>id</b> member field
  */
 public interface IdAware<K extends Serializable> {
 

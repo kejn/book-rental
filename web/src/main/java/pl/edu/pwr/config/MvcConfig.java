@@ -18,34 +18,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @EnableWebMvc
 public class MvcConfig extends WebMvcConfigurationSupport {
-	
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
 		// uncomment if you want to use some of your JavaScript/jQuery scripts
 		// registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
 	}
-	
+
 	@Override
-    @Bean
-    public HandlerMapping resourceHandlerMapping() {
-        AbstractHandlerMapping handlerMapping = (AbstractHandlerMapping) super.resourceHandlerMapping();
-        handlerMapping.setOrder(-1);
-        return handlerMapping;
-    }
+	@Bean
+	public HandlerMapping resourceHandlerMapping() {
+		AbstractHandlerMapping handlerMapping = (AbstractHandlerMapping) super.resourceHandlerMapping();
+		handlerMapping.setOrder(-1);
+		return handlerMapping;
+	}
 
 	@Override
 	protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(converter());
-        addDefaultHttpMessageConverters(converters);
-    }
+		converters.add(converter());
+		addDefaultHttpMessageConverters(converters);
+	}
 
-    @Bean
-    protected MappingJackson2HttpMessageConverter converter() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(jsonObjectMapper().getObject());
-        return converter;
-    }
+	@Bean
+	protected MappingJackson2HttpMessageConverter converter() {
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setObjectMapper(jsonObjectMapper().getObject());
+		return converter;
+	}
 
 	@Bean
 	public Jackson2ObjectMapperFactoryBean jsonObjectMapper() {
@@ -53,11 +53,10 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 		bean.setObjectMapper(objectMapper());
 		return bean;
 	}
-	
+
 	@Bean
 	protected ObjectMapper objectMapper() {
 		return new ObjectMapper();
 	}
 
 }
-
