@@ -2,6 +2,7 @@ package pl.edu.pwr.dao.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,14 +12,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.mysema.query.types.path.EntityPathBase;
 
 import net.logstash.logback.encoder.org.apache.commons.lang.NullArgumentException;
 import pl.edu.pwr.annotation.NullableId;
 import pl.edu.pwr.config.DataAccessConfig;
 import pl.edu.pwr.dao.Dao;
 
+/**
+ * Abstract instance of Data Access Object
+ * @author KNIEMCZY
+ *
+ * @param <T> type of entity
+ * @param <Q> generated Q-type of entity
+ * @param <K> key type of entity just like for its ID member field
+ */
 @Transactional(Transactional.TxType.REQUIRED)
-public abstract class AbstractDao<T, Q, K extends Serializable> implements Dao<T, K> {
+public abstract class AbstractDao<T, Q extends EntityPathBase<?>, K extends Serializable> implements Dao<T, K> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDao.class);
 
@@ -32,14 +42,18 @@ public abstract class AbstractDao<T, Q, K extends Serializable> implements Dao<T
 	protected Q qEntity;
 
 	/**
-	 * Should create new JPAQuery and initialize qEntity. Call this method
+	 * Creates a new JPAQuery and initializes qEntity. Call this method
 	 * before any <b>query.from(qEntity)</b> usage.
 	 */
-	protected abstract void prepareQueryVariables();
-	
-	protected void createJPAQuery() {
+	protected void prepareQueryVariables() {
 		query = new JPAQuery(entityManager);
+		setQEntity();
 	}
+	
+	/**
+	 * Should set qEntity to generated QClass.class
+	 */
+	protected abstract void setQEntity();
 	
 	protected void checkIfArgumentIsNull(Object argument, String argumentName) {
 		if (argument == null) {
@@ -64,6 +78,13 @@ public abstract class AbstractDao<T, Q, K extends Serializable> implements Dao<T
 	@Override
 	public boolean exists(K id) {
 		return findOne(id) != null;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<T> findAll() {
+		prepareQueryVariables();
+		return (List<T>) query.from(qEntity).list(qEntity);
 	}
 
 	@Override

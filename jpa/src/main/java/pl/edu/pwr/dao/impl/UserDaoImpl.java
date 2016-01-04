@@ -14,8 +14,7 @@ import pl.edu.pwr.entity.UserEntity;
 public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal> implements UserDao {
 
 	@Override
-	protected void prepareQueryVariables() {
-		createJPAQuery();
+	protected void setQEntity() {
 		qEntity = QUserEntity.userEntity;
 	}
 

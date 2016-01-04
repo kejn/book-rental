@@ -15,8 +15,7 @@ import pl.edu.pwr.entity.QBookEntity;
 public class BookDaoImpl extends AbstractDao<BookEntity, QBookEntity, BigDecimal> implements BookDao {
 
 	@Override
-	protected void prepareQueryVariables() {
-		createJPAQuery();
+	protected void setQEntity() {
 		qEntity = QBookEntity.bookEntity;
 	}
 

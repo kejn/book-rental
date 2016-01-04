@@ -66,5 +66,14 @@ public class LibraryDaoImplTest {
 		// when
 		library = libraryDao.save(library);
 	}
+	
+	@Test
+	public void shouldFindAllLibraries() {
+		// when
+		List<LibraryEntity> libraries = libraryDao.findAll();
+		// then
+		assertNotNull(libraries);
+		assertFalse(libraries.isEmpty());
+	}
 
 }

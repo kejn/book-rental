@@ -11,11 +11,10 @@ import pl.edu.pwr.entity.QLibraryEntity;
 
 @Component
 public class LibraryDaoImpl extends AbstractDao<LibraryEntity, QLibraryEntity, BigDecimal> implements LibraryDao {
-
+	
 	@Override
-	protected void prepareQueryVariables() {
-		createJPAQuery();
-		qEntity = QLibraryEntity.libraryEntity;		
+	protected void setQEntity() {
+		qEntity = QLibraryEntity.libraryEntity;
 	}
 
 	@Override
@@ -24,6 +23,4 @@ public class LibraryDaoImpl extends AbstractDao<LibraryEntity, QLibraryEntity, B
 		prepareQueryVariables();
 		return query.from(qEntity).where(qEntity.name.containsIgnoreCase(name)).list(qEntity);
 	}
-
-
 }
