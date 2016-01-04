@@ -1,7 +1,7 @@
 package pl.edu.pwr.dao;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 
 import pl.edu.pwr.entity.BookEntity;
 
@@ -15,7 +15,7 @@ public interface BookDao extends Dao<BookEntity, BigDecimal> {
 	 * @return list of book entities found in database matching above criteria or
 	 *         <b>null</b> otherwise.
 	 */
-	public List<BookEntity> findBooksByTitle(String bookTitle);
+	public Collection<BookEntity> findBooksByTitle(String bookTitle);
 
 	/**
 	 * Searches database for books matching given author name and/or surname.
@@ -25,7 +25,7 @@ public interface BookDao extends Dao<BookEntity, BigDecimal> {
 	 * @return list of book entities found in database matching above criteria or
 	 *         <b>null</b> otherwise.
 	 */
-	public List<BookEntity> findBooksByAuthor(String author);
+	public Collection<BookEntity> findBooksByAuthor(String author);
 
 	/**
 	 * Searches database for books matching given library name.
@@ -35,6 +35,6 @@ public interface BookDao extends Dao<BookEntity, BigDecimal> {
 	 * @return list of book entities found in database matching above criteria or
 	 *         <b>null</b> otherwise.
 	 */
-	public List<BookEntity> findBooksByLibraryName(String libraryName);
+	public Collection<BookEntity> findBooksByLibraryName(String libraryName);
 
 }

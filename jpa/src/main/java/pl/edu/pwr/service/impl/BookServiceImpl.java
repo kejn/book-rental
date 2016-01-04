@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.edu.pwr.dao.BookDao;
+import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.mapper.impl.BookMapper;
 import pl.edu.pwr.service.BookService;
 import pl.edu.pwr.to.BookTo;
@@ -15,12 +16,34 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private BookDao bookDao;
-	
+
 	@Autowired
 	private BookMapper bookMapper;
-	
+
+	@Override
+	public List<BookTo> findAll() {
+		return bookMapper.map2To(bookDao.findAll());
+	}
+
+	@Override
 	public List<BookTo> findBooksByTitle(String bookTitle) {
-		return (List<BookTo>) bookMapper.map2To(bookDao.findBooksByTitle(bookTitle));
+		return bookMapper.map2To(bookDao.findBooksByTitle(bookTitle));
+	}
+
+	@Override
+	public List<BookTo> findBooksByAuthor(String author) {
+		return bookMapper.map2To(bookDao.findBooksByAuthor(author));
+	}
+
+	@Override
+	public List<BookTo> findBooksByLibraryName(String libraryName) {
+		return bookMapper.map2To(bookDao.findBooksByLibraryName(libraryName));
+	}
+
+	@Override
+	public BookTo save(BookTo book) {
+		BookEntity bookToSaveByDao = bookMapper.map2Entity(book);
+		return bookMapper.map2To(bookDao.save(bookToSaveByDao));
 	}
 
 }

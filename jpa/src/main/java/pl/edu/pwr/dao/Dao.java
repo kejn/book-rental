@@ -1,7 +1,7 @@
 package pl.edu.pwr.dao;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 public interface Dao<T, K extends Serializable> {
 
@@ -11,7 +11,7 @@ public interface Dao<T, K extends Serializable> {
 
 	public boolean exists(K id);
 
-	public List<T> findAll();
+	public Collection<T> findAll();
 
 	public T findOne(K id);
 

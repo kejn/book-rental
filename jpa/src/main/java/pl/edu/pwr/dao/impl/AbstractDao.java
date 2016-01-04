@@ -16,6 +16,7 @@ import com.mysema.query.types.path.EntityPathBase;
 
 import net.logstash.logback.encoder.org.apache.commons.lang.NullArgumentException;
 import pl.edu.pwr.annotation.NullableId;
+import pl.edu.pwr.common.IdAware;
 import pl.edu.pwr.config.DataAccessConfig;
 import pl.edu.pwr.dao.Dao;
 
@@ -24,12 +25,17 @@ import pl.edu.pwr.dao.Dao;
  * 
  * @author KNIEMCZY
  *
- * @param <T> type of entity
- * @param <Q> generated Q-type of entity
- * @param <K> key type of entity just like for its ID member field
+ * @param <T>
+ *          type of entity
+ * @param
+ *          <Q>
+ *          generated Q-type of entity
+ * @param <K>
+ *          key type of entity just like for its ID member field
  */
 @Transactional(Transactional.TxType.REQUIRED)
-public abstract class AbstractDao<T, Q extends EntityPathBase<?>, K extends Serializable> implements Dao<T, K> {
+public abstract class AbstractDao<T extends IdAware<K>, Q extends EntityPathBase<?>, K extends Serializable>
+    implements Dao<T, K> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDao.class);
 
@@ -65,14 +71,21 @@ public abstract class AbstractDao<T, Q extends EntityPathBase<?>, K extends Seri
 		}
 	}
 
+	/**
+	 * Deletes entity from DB matching given <b>id</b>.
+	 */
 	@Override
 	public void delete(K id) {
 		entityManager.remove(getOne(id));
 	}
 
+	/**
+	 * Deletes entity from DB matching given <b>entity</b> (by getting its id).
+	 * {@link #update(IdAware)} is necessary to merge given entity into transaction.
+	 */
 	@Override
 	public void delete(T entity) {
-		entityManager.remove(entityManager.merge(entity));
+		entityManager.remove(update(entity));
 	}
 
 	@Override

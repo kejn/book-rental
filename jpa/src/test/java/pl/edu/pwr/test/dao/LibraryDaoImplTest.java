@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class LibraryDaoImplTest {
 		// given
 		final String libraryName = "we wrocławiu";
 		// when
-		List<LibraryEntity> libraries = libraryDao.findLibrariesByName(libraryName);
+		List<LibraryEntity> libraries = new ArrayList<>(libraryDao.findLibrariesByName(libraryName));
 		// then
 		assertNotNull(libraries);
 		assertFalse(libraries.isEmpty());
@@ -70,7 +71,7 @@ public class LibraryDaoImplTest {
 	@Test
 	public void shouldFindAllLibraries() {
 		// when
-		List<LibraryEntity> libraries = libraryDao.findAll();
+		List<LibraryEntity> libraries = new ArrayList<>(libraryDao.findAll());
 		// then
 		assertNotNull(libraries);
 		assertFalse(libraries.isEmpty());

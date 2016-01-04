@@ -17,9 +17,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import pl.edu.pwr.common.IdAware;
+
 @Entity
 @Table(name = UserEntity.tableName)
-public class UserEntity {
+public class UserEntity implements IdAware<BigDecimal> {
 
 	public static final String referenceUserIdColumnName = "USER_ID";
 	public static final String referenceUserBookTableName = "USER_BOOK";
@@ -66,6 +68,7 @@ public class UserEntity {
 		}
 	}
 
+	@Override
 	public BigDecimal getId() {
 		return id;
 	}

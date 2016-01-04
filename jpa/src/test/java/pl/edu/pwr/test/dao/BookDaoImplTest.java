@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -55,7 +56,7 @@ public class BookDaoImplTest {
 		// given
 		final String titleFragment = "pierwsza";
 		// when
-		List<BookEntity> books = bookDao.findBooksByTitle(titleFragment);
+		List<BookEntity> books = new ArrayList<>(bookDao.findBooksByTitle(titleFragment));
 		// then
 		assertNotNull(books);
 		assertFalse(books.isEmpty());
@@ -67,7 +68,7 @@ public class BookDaoImplTest {
 		// given
 		final String authorPrefix = "kowalski";
 		// when
-		List<BookEntity> books = bookDao.findBooksByAuthor(authorPrefix);
+		List<BookEntity> books = new ArrayList<>(bookDao.findBooksByAuthor(authorPrefix));
 		// then
 		assertFalse(books.isEmpty());
 		final Set<AuthorEntity> authors = books.get(0).getAuthors();
@@ -136,7 +137,7 @@ public class BookDaoImplTest {
 		// given
 		final String libraryName = "wrocław";
 		// when
-		List<BookEntity> books = bookDao.findBooksByLibraryName(libraryName);
+		List<BookEntity> books = new ArrayList<>(bookDao.findBooksByLibraryName(libraryName));
 		// then
 		assertNotNull(books);
 		assertFalse(books.isEmpty());

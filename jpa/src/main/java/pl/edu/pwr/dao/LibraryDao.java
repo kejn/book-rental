@@ -1,7 +1,7 @@
 package pl.edu.pwr.dao;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 
 import pl.edu.pwr.entity.LibraryEntity;
 
@@ -15,6 +15,6 @@ public interface LibraryDao extends Dao<LibraryEntity, BigDecimal> {
 	 * @return list of library entities found in database matching above criteria
 	 *         or <b>null</b> otherwise.
 	 */
-	public List<LibraryEntity> findLibrariesByName(String libraryName);
+	public Collection<LibraryEntity> findLibrariesByName(String libraryName);
 
 }
