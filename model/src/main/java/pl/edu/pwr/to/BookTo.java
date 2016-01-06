@@ -22,6 +22,10 @@ public class BookTo implements IdAware<BigDecimal> {
 		this.libraries = libraries;
 	}
 
+	public BookTo(BigDecimal bookId) {
+		this.id = bookId;
+	}
+
 	@Override
 	public BigDecimal getId() {
 		return id;

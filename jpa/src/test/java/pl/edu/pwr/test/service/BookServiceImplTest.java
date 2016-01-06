@@ -26,12 +26,13 @@ import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.mapper.impl.AuthorMapper;
 import pl.edu.pwr.mapper.impl.BookLibraryMapper;
 import pl.edu.pwr.mapper.impl.BookMapper;
+import pl.edu.pwr.mapper.impl.LibraryMapper;
 import pl.edu.pwr.service.impl.BookServiceImpl;
 import pl.edu.pwr.to.BookTo;
 
 public class BookServiceImplTest {
 
-	private BookMapper bookMapper = new BookMapper(new AuthorMapper(), new BookLibraryMapper());
+	private BookMapper bookMapper = new BookMapper(new AuthorMapper(), new BookLibraryMapper(new LibraryMapper()));
 
 	@Mock
 	private BookDao bookDao;

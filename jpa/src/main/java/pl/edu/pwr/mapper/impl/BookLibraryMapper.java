@@ -4,23 +4,36 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.entity.BookLibraryEntity;
 import pl.edu.pwr.mapper.Mapper;
 import pl.edu.pwr.to.BookLibraryTo;
+import pl.edu.pwr.to.BookTo;
 
 @Component
 public class BookLibraryMapper implements Mapper<BookLibraryTo, BookLibraryEntity> {
 
+	@Autowired
+	private LibraryMapper libraryMapper;
+	
+	protected BookLibraryMapper() {
+	}
+	
+	public BookLibraryMapper(LibraryMapper libraryMapper) {
+		this.libraryMapper = libraryMapper;
+	}
+	
 	@Override
 	public BookLibraryTo map2To(BookLibraryEntity entity) {
-		return new BookLibraryTo(entity.getBook(), entity.getLibrary(), entity.getQuantity());
+		return new BookLibraryTo(new BookTo(entity.getBookId()), libraryMapper.map2To(entity.getLibrary()), entity.getQuantity());
 	}
 
 	@Override
 	public BookLibraryEntity map2Entity(BookLibraryTo to) {
-		return new BookLibraryEntity(to.getBook(), to.getLibrary(), to.getQuantity());
+		return new BookLibraryEntity(new BookEntity(to.getBookId()), libraryMapper.map2Entity(to.getLibrary()), to.getQuantity());
 	}
 
 	@Override

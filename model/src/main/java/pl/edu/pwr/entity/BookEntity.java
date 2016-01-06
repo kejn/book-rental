@@ -87,6 +87,13 @@ public class BookEntity implements IdAware<BigDecimal> {
 	}
 
 	/**
+	 * For BookLibraryMapper
+	 */
+	public BookEntity(BigDecimal bookId) {
+		this.id = bookId;
+	}
+
+	/**
 	 * Adds <b>authors</b> to this.authors set.
 	 * 
 	 * @param authors

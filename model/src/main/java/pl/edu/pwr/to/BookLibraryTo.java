@@ -2,9 +2,6 @@ package pl.edu.pwr.to;
 
 import java.math.BigDecimal;
 
-import pl.edu.pwr.entity.BookEntity;
-import pl.edu.pwr.entity.LibraryEntity;
-
 public class BookLibraryTo {
 
 	private BigDecimal bookId;
@@ -13,15 +10,15 @@ public class BookLibraryTo {
 
 	private int quantity;
 
-	private BookEntity book;
+	private BookTo book;
 
-	private LibraryEntity library;
+	private LibraryTo library;
 
-	public BookLibraryTo(BookEntity book, LibraryEntity library, int quantity) {
-		this.bookId = book.getId();
+	public BookLibraryTo(BookTo bookTo, LibraryTo library, int quantity) {
+		this.bookId = bookTo.getId();
 		this.libraryId = library.getId();
 		this.quantity = quantity;
-		this.book = book;
+		this.book = bookTo;
 		this.library = library;
 	}
 
@@ -49,19 +46,19 @@ public class BookLibraryTo {
 		this.quantity = quantity;
 	}
 
-	public BookEntity getBook() {
+	public BookTo getBook() {
 		return book;
 	}
 
-	public void setBook(BookEntity book) {
+	public void setBook(BookTo book) {
 		this.book = book;
 	}
 
-	public LibraryEntity getLibrary() {
+	public LibraryTo getLibrary() {
 		return library;
 	}
 
-	public void setLibrary(LibraryEntity library) {
+	public void setLibrary(LibraryTo library) {
 		this.library = library;
 	}
 

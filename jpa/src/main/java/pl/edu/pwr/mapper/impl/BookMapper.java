@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import pl.edu.pwr.entity.BookEntity;
+import pl.edu.pwr.entity.BookLibraryEntity;
 import pl.edu.pwr.mapper.Mapper;
+import pl.edu.pwr.to.BookLibraryTo;
 import pl.edu.pwr.to.BookTo;
 
 @Component
@@ -19,7 +21,7 @@ public class BookMapper implements Mapper<BookTo, BookEntity>{
 
 	@Autowired
 	private BookLibraryMapper bookLibraryMapper;
-
+	
 	protected BookMapper() {
 	}
 

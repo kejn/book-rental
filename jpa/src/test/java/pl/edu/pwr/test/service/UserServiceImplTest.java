@@ -17,6 +17,7 @@ import pl.edu.pwr.dao.UserDao;
 import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.mapper.impl.AuthorMapper;
 import pl.edu.pwr.mapper.impl.BookMapper;
+import pl.edu.pwr.mapper.impl.LibraryMapper;
 import pl.edu.pwr.mapper.impl.UserMapper;
 import pl.edu.pwr.mapper.impl.BookLibraryMapper;
 import pl.edu.pwr.service.impl.UserServiceImpl;
@@ -30,7 +31,7 @@ public class UserServiceImplTest {
 	@InjectMocks
 	private UserServiceImpl userService;
 
-	private UserMapper userMapper = new UserMapper(new BookMapper(new AuthorMapper(), new BookLibraryMapper()));
+	private UserMapper userMapper = new UserMapper(new BookMapper(new AuthorMapper(), new BookLibraryMapper(new LibraryMapper())));
 
 	@Before
 	public void setUp() {
