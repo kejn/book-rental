@@ -14,23 +14,23 @@ import pl.edu.pwr.to.LibraryTo;
 public class LibraryMapper implements Mapper<LibraryTo, LibraryEntity> {
 
 	@Override
-	public LibraryTo map2To(LibraryEntity libraryEntity) {
-		return new LibraryTo(libraryEntity.getId(), libraryEntity.getName());
+	public LibraryTo map2To(LibraryEntity entity) {
+		return new LibraryTo(entity.getId(), entity.getName());
 	}
 
 	@Override
-	public LibraryEntity map2Entity(LibraryTo libraryTo) {
-		return new LibraryEntity(libraryTo.getId(), libraryTo.getName());
+	public LibraryEntity map2Entity(LibraryTo to) {
+		return new LibraryEntity(to.getId(), to.getName());
 	}
 
 	@Override
-	public Set<LibraryTo> map2To(Collection<LibraryEntity> libraryEntities) {
-		return libraryEntities.stream().map(this::map2To).collect(Collectors.toSet());
+	public Set<LibraryTo> map2To(Collection<LibraryEntity> entities) {
+		return entities.stream().map(this::map2To).collect(Collectors.toSet());
 	}
 
 	@Override
-	public Set<LibraryEntity> map2Entity(Collection<LibraryTo> libraryTos) {
-		return libraryTos.stream().map(this::map2Entity).collect(Collectors.toSet());
+	public Set<LibraryEntity> map2Entity(Collection<LibraryTo> tos) {
+		return tos.stream().map(this::map2Entity).collect(Collectors.toSet());
 	}
 
 }

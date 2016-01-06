@@ -9,5 +9,6 @@ public class NotNullIdException extends RuntimeException {
 	}
 
 	public NotNullIdException() {
+		super();
 	}
 }

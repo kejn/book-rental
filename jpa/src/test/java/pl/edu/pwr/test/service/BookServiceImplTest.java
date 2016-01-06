@@ -6,9 +6,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,14 +24,14 @@ import pl.edu.pwr.entity.AuthorEntity;
 import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.mapper.impl.AuthorMapper;
+import pl.edu.pwr.mapper.impl.BookLibraryMapper;
 import pl.edu.pwr.mapper.impl.BookMapper;
-import pl.edu.pwr.mapper.impl.LibraryMapper;
 import pl.edu.pwr.service.impl.BookServiceImpl;
 import pl.edu.pwr.to.BookTo;
 
 public class BookServiceImplTest {
 
-	private BookMapper bookMapper = new BookMapper(new AuthorMapper(), new LibraryMapper());
+	private BookMapper bookMapper = new BookMapper(new AuthorMapper(), new BookLibraryMapper());
 
 	@Mock
 	private BookDao bookDao;
@@ -44,12 +42,14 @@ public class BookServiceImplTest {
 	private BookEntity bookEntityMock() {
 		AuthorEntity author1 = new AuthorEntity(new BigDecimal("1"), "Jan", "Kowalski");
 		AuthorEntity author2 = new AuthorEntity(new BigDecimal("2"), "Jan", "Brzechwa");
-		Set<AuthorEntity> authors = new HashSet<>(Arrays.asList(author1, author2));
 
 		LibraryEntity library = new LibraryEntity(new BigDecimal("1"), "Biblioteka we Wrocławiu");
-		Set<LibraryEntity> libraries = new HashSet<>(Arrays.asList(library));
+		
+		BookEntity book = new BookEntity(new BigDecimal("1"), "Pierwsza książka");
+		book.addAuthors(author1, author2);
+		book.addLibrary(library, 1);
 
-		return new BookEntity(new BigDecimal("1"), "Pierwsza książka", authors, libraries);
+		return book;
 	}
 
 	@Before

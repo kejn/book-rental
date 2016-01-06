@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -94,10 +97,12 @@ public abstract class AbstractDao<T extends IdAware<K>, Q extends EntityPathBase
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
-		prepareQueryVariables();
-		return (List<T>) query.from(qEntity).list(qEntity);
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<T> criteriaQuery = builder.createQuery(getDomainClass());
+		criteriaQuery.from(getDomainClass());
+		TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
+		return query.getResultList();
 	}
 
 	@Override

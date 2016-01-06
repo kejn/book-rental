@@ -36,5 +36,5 @@ public interface BookDao extends Dao<BookEntity, BigDecimal> {
 	 *         <b>null</b> otherwise.
 	 */
 	public Collection<BookEntity> findBooksByLibraryName(String libraryName);
-
+	
 }

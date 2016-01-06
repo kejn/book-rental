@@ -40,7 +40,7 @@ public class UserEntity implements IdAware<BigDecimal> {
 	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-	    CascadeType.REFRESH, CascadeType.REMOVE })
+	    CascadeType.REFRESH })
 	@JoinTable(name = referenceUserBookTableName, joinColumns = {
 	    @JoinColumn(name = referenceUserIdColumnName, updatable = false) }, inverseJoinColumns = {
 	        @JoinColumn(name = BookEntity.referenceBookIdColumnName, updatable = false) })

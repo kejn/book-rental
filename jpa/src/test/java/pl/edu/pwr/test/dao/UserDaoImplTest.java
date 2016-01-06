@@ -1,37 +1,44 @@
 package pl.edu.pwr.test.dao;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import pl.edu.pwr.dao.BookDao;
+import pl.edu.pwr.dao.BookLibraryDao;
+import pl.edu.pwr.dao.LibraryDao;
 import pl.edu.pwr.dao.UserDao;
 import pl.edu.pwr.entity.BookEntity;
+import pl.edu.pwr.entity.BookLibraryEntity;
+import pl.edu.pwr.entity.BookLibraryEntityId;
+import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.entity.UserEntity;
+import pl.edu.pwr.exception.BookAlreadyRentException;
+import pl.edu.pwr.exception.BookNotAvailableException;
 import pl.edu.pwr.test.config.DataAccessTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DataAccessTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class UserDaoImplTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserDaoImplTest.class);
-
 	@Autowired
 	private UserDao userDao;
 
 	@Autowired
 	private BookDao bookDao;
+	
+	@Autowired
+	private LibraryDao libraryDao;
+
+	@Autowired
+	private BookLibraryDao bookLibraryDao;
 
 	@Test
 	public void shouldFindUserById() {
@@ -57,22 +64,44 @@ public class UserDaoImplTest {
 	}
 
 	/**
-	 * !!! depends on {@link #shouldFindUserById()} and
-	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()}
+	 * !!! depends on {@link #shouldFindUserById()},
+	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()},
+	 * {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById()} and
+	 * {@link pl.edu.pwr.test.dao.BookLibraryDaoImplTest#shouldFindBookLibraryByBookLibraryEntityId()}
+	 * 
 	 */
 	@Test
-	public void shouldUpdateUserWithNewBook() {
+	public void shouldRentUserABook() {
 		// given
-		final BookEntity book = bookDao.findOne(new BigDecimal("1"));
-		logger.info(book.toString());
+		final BigDecimal bookId = BigDecimal.ONE;
+		final BigDecimal libraryId = BigDecimal.ONE;
+		final BigDecimal userId = BigDecimal.ONE;
+		
+		final BookEntity book = bookDao.findOne(bookId);
+		final LibraryEntity library = libraryDao.findOne(libraryId);
+		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(book, library);
+		
+		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		final int quantityBefore = bookLibraryEntity.getQuantity();
+		
+		UserEntity user = userDao.findOne(userId);
 		// when
-		UserEntity user = userDao.findOne(new BigDecimal("2"));
-		user.addBooks(book);
-		user = userDao.update(user);
-		// then
-		assertNotNull(user);
-		assertFalse(user.getBooks().isEmpty());
-		assertEquals(1, user.getBooks().size());
+		try {
+			user = userDao.rentUserABook(user, book, library);
+		
+			bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+			final int quantityAfter = bookLibraryEntity.getQuantity();
+
+			// then
+			assertNotNull(user);
+			assertFalse(user.getBooks().isEmpty());
+			assertEquals(1, user.getBooks().size());
+			assertTrue(quantityBefore >= 0);
+			assertTrue(quantityAfter >= 0);
+			assertEquals(quantityBefore, quantityAfter + 1);
+		} catch (BookAlreadyRentException | BookNotAvailableException e) {
+			fail(e.getMessage());
+		}
 	}
 
 }

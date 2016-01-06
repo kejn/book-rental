@@ -20,6 +20,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.entity.AuthorEntity;
 import pl.edu.pwr.entity.BookEntity;
+import pl.edu.pwr.entity.BookLibraryEntity;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.exception.NotNullIdException;
 import pl.edu.pwr.test.config.DataAccessTestConfig;
@@ -83,7 +84,7 @@ public class BookDaoImplTest {
 		final LibraryEntity library = new LibraryEntity(null, "Biblioteka #1 do zapisania z książką");
 		BookEntity book = new BookEntity(null, "Książka do zapisania z id=null");
 		book.addAuthors(author);
-		book.addLibraries(library);
+		book.addLibrary(library, 1);
 		// when
 		book = bookDao.save(book);
 		// then
@@ -98,7 +99,7 @@ public class BookDaoImplTest {
 		final LibraryEntity library = new LibraryEntity(null, "Biblioteka #2 do zapisania z książką");
 		BookEntity book = new BookEntity(BigDecimal.ONE, "Książka do zapisania z id!=null");
 		book.addAuthors(author);
-		book.addLibraries(library);
+		book.addLibrary(library, 1);
 		// when
 		book = bookDao.save(book);
 	}
@@ -112,9 +113,9 @@ public class BookDaoImplTest {
 		final BigDecimal id = new BigDecimal("2");
 		// when
 		bookDao.delete(id);
-		final BookEntity book = bookDao.findOne(id);
+		boolean bookExistsInDatabase = bookDao.exists(id);
 		// then
-		assertTrue(book == null);
+		assertFalse(bookExistsInDatabase);
 	}
 
 	/**
@@ -141,9 +142,12 @@ public class BookDaoImplTest {
 		// then
 		assertNotNull(books);
 		assertFalse(books.isEmpty());
-		assertNotNull(books.get(0).getLibraries());
-		assertTrue(
-		    books.get(0).getLibraries().stream().anyMatch(library -> library.getName().equals("Biblioteka we Wrocławiu")));
+		
+		final BookEntity bookToValidate = books.get(0);
+		assertNotNull(bookToValidate.getLibraries());
+		
+		final Set<BookLibraryEntity> libraryToValidate = bookToValidate.getLibraries();
+		assertTrue(libraryToValidate.stream().anyMatch(l -> l.getLibrary().getName().equals("Biblioteka we Wrocławiu")));
 	}
 
 }

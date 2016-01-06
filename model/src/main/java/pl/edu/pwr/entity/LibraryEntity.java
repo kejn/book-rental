@@ -1,12 +1,16 @@
 package pl.edu.pwr.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -28,12 +32,29 @@ public class LibraryEntity implements IdAware<BigDecimal> {
 	@Column(nullable = false)
 	private String name;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "library")
+	private List<BookLibraryEntity> books;
+
 	protected LibraryEntity() {
 	}
 
 	public LibraryEntity(BigDecimal id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+
+	@Override
+	public int hashCode() {
+		return 0;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof LibraryEntity) {
+			LibraryEntity library = (LibraryEntity) obj;
+			return library.getId().equals(id) && library.getName().equals(name);
+		}
+		return false;
 	}
 
 	@Override
@@ -52,4 +73,5 @@ public class LibraryEntity implements IdAware<BigDecimal> {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,6 +21,7 @@ import pl.edu.pwr.dao.LibraryDao;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.mapper.impl.LibraryMapper;
 import pl.edu.pwr.service.impl.LibraryServiceImpl;
+import pl.edu.pwr.to.LibraryTo;
 
 public class LibraryServiceImplTestTest {
 
@@ -40,13 +42,26 @@ public class LibraryServiceImplTestTest {
 	}
 	
 	@Test
+	public void shouldFindAllLibraries() {
+		// when
+		Mockito.when(libraryDao.findAll()).thenReturn(Arrays.asList(libraryMock));
+		List<LibraryTo> libraries = new ArrayList<>(libraryService.findAll());
+		// then
+		Mockito.verify(libraryDao).findAll();
+		assertNotNull(libraries);
+		assertFalse(libraries.isEmpty());
+	}
+	
+	@Test
 	public void shouldFindLibraryByName() {
 		// given
 		final String libraryName = "we wrocławiu";
 		// when
 		Mockito.when(libraryDao.findLibrariesByName(libraryName)).thenReturn(Arrays.asList(libraryMock));
-		List<LibraryEntity> libraries = new ArrayList<>(libraryDao.findLibrariesByName(libraryName));
+		List<LibraryTo> libraries = new ArrayList<>(libraryService.findLibrariesByName(libraryName));
 		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(libraryDao).findLibrariesByName(captor.capture());
 		assertNotNull(libraries);
 		assertFalse(libraries.isEmpty());
 	}

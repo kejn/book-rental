@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -26,7 +27,7 @@ public class BookEntity implements IdAware<BigDecimal> {
 
 	public static final String referenceBookIdColumnName = "BOOK_ID";
 	public static final String referenceBookAuthorTableName = "BOOK_AUTHOR";
-	public static final String referenceBookLibraryTableName = "BOOK_LIBRARY";
+	// public static final String referenceBookLibraryTableName = "BOOK_LIBRARY";
 	protected static final String tableName = "BOOKS";
 	private static final String sequenceName = "BOOKS_SEQ";
 
@@ -39,18 +40,22 @@ public class BookEntity implements IdAware<BigDecimal> {
 	private String title;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-	    CascadeType.REFRESH, CascadeType.REMOVE })
+	    CascadeType.REFRESH })
 	@JoinTable(name = referenceBookAuthorTableName, joinColumns = {
 	    @JoinColumn(name = referenceBookIdColumnName, updatable = false) }, inverseJoinColumns = {
 	        @JoinColumn(name = AuthorEntity.referenceAuthorIdColumnName, updatable = false) })
 	private Set<AuthorEntity> authors = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-	    CascadeType.REFRESH, CascadeType.REMOVE })
-	@JoinTable(name = "BOOK_LIBRARY", joinColumns = {
-	    @JoinColumn(name = "BOOK_ID", updatable = false) }, inverseJoinColumns = {
-	        @JoinColumn(name = "LIBRARY_ID", updatable = false) })
-	private Set<LibraryEntity> libraries = new HashSet<>();
+	// @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH,
+	// CascadeType.MERGE, CascadeType.PERSIST,
+	// CascadeType.REFRESH })
+	// @JoinTable(name = referenceBookLibraryTableName, joinColumns = {
+	// @JoinColumn(name = referenceBookIdColumnName, updatable = false) },
+	// inverseJoinColumns = {
+	// @JoinColumn(name = LibraryEntity.referenceLibraryIdColumnName, updatable =
+	// false) })
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "book")
+	private Set<BookLibraryEntity> libraries = new HashSet<>();
 
 	protected BookEntity() {
 	}
@@ -67,7 +72,7 @@ public class BookEntity implements IdAware<BigDecimal> {
 	 * @param libraries
 	 *          set of libraries where this book is available
 	 */
-	public BookEntity(BigDecimal id, String title, Set<AuthorEntity> authors, Set<LibraryEntity> libraries) {
+	public BookEntity(BigDecimal id, String title, Set<AuthorEntity> authors, Set<BookLibraryEntity> libraries) {
 		this.id = id;
 		this.title = title;
 		this.authors = authors;
@@ -77,7 +82,7 @@ public class BookEntity implements IdAware<BigDecimal> {
 	/**
 	 * Creates entity by assigning member fields <b>id</b> and <b>title</b>. After
 	 * that it is required to call {@link #addAuthors(AuthorEntity...)} and
-	 * {@link #addLibraries(LibraryEntity...)} methods.
+	 * {@link #addOneToLibraries(LibraryEntity...)} methods.
 	 * 
 	 * @param id
 	 *          id in database
@@ -89,23 +94,36 @@ public class BookEntity implements IdAware<BigDecimal> {
 		this.title = title;
 	}
 
+	/**
+	 * Adds <b>authors</b> to this.authors set.
+	 * 
+	 * @param authors
+	 *          authors to be added
+	 */
 	public void addAuthors(AuthorEntity... authors) {
 		for (AuthorEntity author: authors) {
 			this.authors.add(author);
 		}
 	}
 
-	public void addLibraries(LibraryEntity... libraries) {
-		for (LibraryEntity library: libraries) {
-			this.libraries.add(library);
-		}
+	/**
+	 * Adds <b>quantity</b> of books (this) to given <b>library</b>
+	 * 
+	 * @param library
+	 *          target library
+	 * @param quantity
+	 *          quantity of books to be added
+	 */
+	public void addLibrary(LibraryEntity library, int quantity) {
+		libraries.add(new BookLibraryEntity(this, library, quantity));
 	}
 
 	@Override
 	public String toString() {
 		return "@BookEntity(id [" + id + "], title [" + title + "], authors ["
-		    + authors.stream().map(a -> a.stringValue()).collect(Collectors.joining(", ")) + "], libraries ["
-		    + libraries.stream().map(l -> l.getName()).collect(Collectors.joining(", ")) + "])";
+		    + authors.stream().map(a -> a.stringValue()).collect(Collectors.joining(", ")) + "], libraries [" + libraries
+		        .stream().map(l -> l.getLibrary().getName() + ": " + l.getQuantity()).collect(Collectors.joining(", "))
+		    + "])";
 	}
 
 	@Override
@@ -133,11 +151,11 @@ public class BookEntity implements IdAware<BigDecimal> {
 		this.authors = authors;
 	}
 
-	public Set<LibraryEntity> getLibraries() {
+	public Set<BookLibraryEntity> getLibraries() {
 		return libraries;
 	}
 
-	public void setLibraries(Set<LibraryEntity> libraries) {
+	public void setLibraries(Set<BookLibraryEntity> libraries) {
 		this.libraries = libraries;
 	}
 
