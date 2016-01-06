@@ -10,19 +10,43 @@ import pl.edu.pwr.entity.LibraryEntity;
 public interface BookLibraryDao extends Dao<BookLibraryEntity, BookLibraryEntityId> {
 
 	/**
-	 * Searches database for libraries matching given name.
+	 * Searches database for book_library bindings referencing <b>library</b>
 	 * 
-	 * @param libraryName
-	 *          name of library to match search results.
-	 * @return list of library entities found in database matching above criteria
-	 *         or <b>null</b> otherwise.
+	 * @param library
+	 *          reference to match search results.
+	 * @return collection of library entities found in database matching above
+	 *         criteria or <b>null</b> otherwise.
 	 */
-	public Collection<BookLibraryEntity> findBookLibraryByLibraryName(String libraryName);
-	
+	public Collection<BookLibraryEntity> findBookLibraryByLibrary(LibraryEntity library);
+
+	/**
+	 * Searches database for book_library bindings referencing <b>book</b>
+	 * 
+	 * @param book
+	 *          reference to match search results
+	 * @return collection of library entities found in database matching above
+	 *         criteria or <b>null</b> otherwise.
+	 */
 	public Collection<BookLibraryEntity> findBookLibraryByBook(BookEntity book);
-	
+
+	/**
+	 * Removes book_library bindings referencing <b>book</b>
+	 * 
+	 * @param book
+	 *          reference to match removed bindings
+	 */
 	public void deleteBookLibraryByBook(BookEntity book);
-	
+
+	/**
+	 * Updates book_library bindings in database with new one setting its quantity
+	 * to 1 or increases by 1 quantity of a binding if it already exists.
+	 * 
+	 * @param book
+	 *          reference to book
+	 * @param library
+	 *          reference to library
+	 * @return updated book_library binding entity
+	 */
 	public BookLibraryEntity addBookToLibrary(BookEntity book, LibraryEntity library);
-	
+
 }

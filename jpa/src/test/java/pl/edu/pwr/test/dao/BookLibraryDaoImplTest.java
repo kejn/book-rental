@@ -50,18 +50,41 @@ public class BookLibraryDaoImplTest {
 		assertNotNull(library);
 	}
 
+	/**
+	 * !!! depends on {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById}
+	 */
 	@Test
-	public void shouldFindLibraryByName() {
+	public void shouldFindBookLibraryByLibrary() {
 		// given
-		final String libraryName = "we wrocławiu";
+		final LibraryEntity library = libraryDao.findOne(BigDecimal.ONE);
 		// when
-		List<BookLibraryEntity> libraries = new ArrayList<>(bookLibraryDao.findBookLibraryByLibraryName(libraryName));
+		List<BookLibraryEntity> libraries = new ArrayList<>(bookLibraryDao.findBookLibraryByLibrary(library));
 		// then
 		assertNotNull(libraries);
 		assertFalse(libraries.isEmpty());
-		assertEquals("Biblioteka we Wrocławiu", libraries.get(0).getLibrary().getName());
+		assertEquals(library, libraries.get(0).getLibrary());
 	}
 
+	/**
+	 * !!! depends on {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById}
+	 */
+	@Test
+	public void shouldFindBookLibraryByBook() {
+		// given
+		final BookEntity book = bookDao.findOne(BigDecimal.ONE);
+		// when
+		List<BookLibraryEntity> books = new ArrayList<>(bookLibraryDao.findBookLibraryByBook(book));
+		// then
+		assertNotNull(books);
+		assertFalse(books.isEmpty());
+		assertEquals(book, books.get(0).getBook());
+	}
+
+	/**
+	 * !!! depends on {@link #shouldFindBookLibraryByBookLibraryEntityId()},
+	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById} and
+	 * {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById}
+	 */
 	@Test
 	public void shouldAddBookToLibrary() {
 		// given
@@ -85,7 +108,7 @@ public class BookLibraryDaoImplTest {
 	}
 
 	@Test
-	public void shouldFindAllLibraries() {
+	public void shouldFindAllBookLibrary() {
 		// when
 		List<BookLibraryEntity> libraries = new ArrayList<>(bookLibraryDao.findAll());
 		// then

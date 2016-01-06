@@ -46,14 +46,6 @@ public class BookEntity implements IdAware<BigDecimal> {
 	        @JoinColumn(name = AuthorEntity.referenceAuthorIdColumnName, updatable = false) })
 	private Set<AuthorEntity> authors = new HashSet<>();
 
-	// @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH,
-	// CascadeType.MERGE, CascadeType.PERSIST,
-	// CascadeType.REFRESH })
-	// @JoinTable(name = referenceBookLibraryTableName, joinColumns = {
-	// @JoinColumn(name = referenceBookIdColumnName, updatable = false) },
-	// inverseJoinColumns = {
-	// @JoinColumn(name = LibraryEntity.referenceLibraryIdColumnName, updatable =
-	// false) })
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "book")
 	private Set<BookLibraryEntity> libraries = new HashSet<>();
 
@@ -116,6 +108,21 @@ public class BookEntity implements IdAware<BigDecimal> {
 	 */
 	public void addLibrary(LibraryEntity library, int quantity) {
 		libraries.add(new BookLibraryEntity(this, library, quantity));
+	}
+
+	@Override
+	public int hashCode() {
+		return id == null ? 0 : id.intValue();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof BookEntity) {
+			BookEntity book = (BookEntity) obj;
+			return book.getId().equals(id) && book.getTitle().equals(title) && book.getAuthors().containsAll(authors)
+			    && book.getAuthors().size() == authors.size();
+		}
+		return false;
 	}
 
 	@Override

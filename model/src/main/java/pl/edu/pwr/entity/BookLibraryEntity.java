@@ -10,7 +10,6 @@ import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import pl.edu.pwr.common.IdAware;
 
@@ -21,12 +20,6 @@ public class BookLibraryEntity implements IdAware<BookLibraryEntityId> {
 
 	protected static final String tableName = "BOOK_LIBRARY";
 
-	@Transient
-	private BigDecimal bookId;
-
-	@Transient
-	private BigDecimal libraryId;
-	
 	@Column
 	private int quantity;
 
@@ -44,8 +37,6 @@ public class BookLibraryEntity implements IdAware<BookLibraryEntityId> {
 	}
 
 	public BookLibraryEntity(BookEntity book, LibraryEntity library, int quantity){
-		this.bookId = book.getId();
-		this.libraryId = library.getId();
 		this.book = book;
 		this.library = library;
 		this.quantity = quantity;
@@ -61,21 +52,19 @@ public class BookLibraryEntity implements IdAware<BookLibraryEntityId> {
 	}
 
 	public BigDecimal getBookId() {
-		return bookId;
+		return book.getId();
 	}
 
 	public void setBookId(BigDecimal bookId) {
 		this.book.setId(bookId);
-		this.bookId = bookId;
 	}
 
 	public BigDecimal getLibraryId() {
-		return libraryId;
+		return library.getId();
 	}
 
 	public void setLibraryId(BigDecimal libraryId) {
 		this.book.setId(libraryId);
-		this.libraryId = libraryId;
 	}
 
 	public int getQuantity() {

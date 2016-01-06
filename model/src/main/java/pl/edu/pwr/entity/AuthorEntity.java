@@ -44,6 +44,20 @@ public class AuthorEntity implements IdAware<BigDecimal> {
 		String lowerCaseName = name.toLowerCase();
 		return firstName.toLowerCase().startsWith(lowerCaseName) || lastName.toLowerCase().startsWith(lowerCaseName);
 	}
+	
+	@Override
+	public int hashCode() {
+		return id == null ? 0 : id.intValue();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof AuthorEntity) {
+			AuthorEntity author = (AuthorEntity) obj;
+			return author.stringValue().equals(stringValue());
+		}
+		return false;
+	}
 
 	@Override
 	public String toString() {

@@ -12,7 +12,7 @@ public interface LibraryDao extends Dao<LibraryEntity, BigDecimal> {
 	 * 
 	 * @param libraryName
 	 *          name of library to match search results.
-	 * @return list of library entities found in database matching above criteria
+	 * @return collection of library entities found in database matching above criteria
 	 *         or <b>null</b> otherwise.
 	 */
 	public Collection<LibraryEntity> findLibrariesByName(String libraryName);

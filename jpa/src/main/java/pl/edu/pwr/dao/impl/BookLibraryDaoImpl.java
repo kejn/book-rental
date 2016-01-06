@@ -21,23 +21,29 @@ public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibr
 
 	@Autowired
 	private BookDao bookDao;
-	
+
 	@Autowired
 	private LibraryDao libraryDao;
-	
+
 	@Override
 	protected void setQEntity() {
 		qEntity = QBookLibraryEntity.bookLibraryEntity;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @return found entity, new book_library entity if not found (book and
+	 *         library cannot be null) or null otherwise
+	 */
 	@Override
 	public BookLibraryEntity findOne(BookLibraryEntityId id) {
 		BookLibraryEntity result = super.findOne(id);
 		if (result == null) {
 			BookEntity book = bookDao.findOne(id.getBook().getId());
 			LibraryEntity library = libraryDao.findOne(id.getLibrary().getId());
-			
-			if(book != null && library != null) {
+
+			if (book != null && library != null) {
 				result = new BookLibraryEntity(book, library, 0);
 			}
 		}
@@ -45,10 +51,10 @@ public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibr
 	}
 
 	@Override
-	public List<BookLibraryEntity> findBookLibraryByLibraryName(String name) {
-		checkIfArgumentIsNull(name, "name");
+	public List<BookLibraryEntity> findBookLibraryByLibrary(LibraryEntity library) {
+		checkIfArgumentIsNull(library, "library");
 		prepareQueryVariables();
-		return query.from(qEntity).where(qEntity.library.name.containsIgnoreCase(name)).list(qEntity);
+		return query.from(qEntity).where(qEntity.library.eq(library)).list(qEntity);
 	}
 
 	@Override
@@ -61,7 +67,7 @@ public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibr
 	@Override
 	public void deleteBookLibraryByBook(BookEntity book) {
 		List<BookLibraryEntity> references = new ArrayList<>(findBookLibraryByBook(book));
-		for(BookLibraryEntity bookLibraryEntity : references) {
+		for (BookLibraryEntity bookLibraryEntity: references) {
 			delete(bookLibraryEntity);
 		}
 	}
@@ -73,5 +79,5 @@ public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibr
 		bookLibrary.setQuantity(quantityBefore + 1);
 		return update(bookLibrary);
 	}
-	
+
 }

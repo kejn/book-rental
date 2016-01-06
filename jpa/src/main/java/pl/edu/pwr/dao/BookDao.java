@@ -12,8 +12,8 @@ public interface BookDao extends Dao<BookEntity, BigDecimal> {
 	 * 
 	 * @param bookTitle
 	 *          title of book to match search results
-	 * @return list of book entities found in database matching above criteria or
-	 *         <b>null</b> otherwise.
+	 * @return collection of book entities found in database matching above
+	 *         criteria or <b>null</b> otherwise.
 	 */
 	public Collection<BookEntity> findBooksByTitle(String bookTitle);
 
@@ -22,8 +22,8 @@ public interface BookDao extends Dao<BookEntity, BigDecimal> {
 	 * 
 	 * @param author
 	 *          authors name and/or surname to match search results
-	 * @return list of book entities found in database matching above criteria or
-	 *         <b>null</b> otherwise.
+	 * @return collection of book entities found in database matching above
+	 *         criteria or <b>null</b> otherwise.
 	 */
 	public Collection<BookEntity> findBooksByAuthor(String author);
 
@@ -32,9 +32,9 @@ public interface BookDao extends Dao<BookEntity, BigDecimal> {
 	 * 
 	 * @param libraryName
 	 *          library name to match search results
-	 * @return list of book entities found in database matching above criteria or
-	 *         <b>null</b> otherwise.
+	 * @return collection of book entities found in database matching above
+	 *         criteria or <b>null</b> otherwise.
 	 */
 	public Collection<BookEntity> findBooksByLibraryName(String libraryName);
-	
+
 }
