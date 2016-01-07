@@ -5,8 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.*;
-
+import static org.junit.Assume.assumeNotNull;
 
 import java.math.BigDecimal;
 
@@ -92,6 +91,7 @@ public class UserDaoImplTest {
 		assumeNotNull(book,library,bookLibraryEntity,user);
 		
 		final int quantityBefore = bookLibraryEntity.getQuantity();
+		final int userBooksSizeBefore = user.getBooks().size();
 		// when
 		try {
 			user = userDao.rentUserABook(user, book, library);
@@ -100,32 +100,37 @@ public class UserDaoImplTest {
 		}
 		bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
 		assumeNotNull(bookLibraryEntity);
-		final int quantityAfter = bookLibraryEntity.getQuantity();
 
+		final int quantityAfter = bookLibraryEntity.getQuantity();
+		final int userBooksSizeAfter = user.getBooks().size();
 		// then
 		assertNotNull(user);
 		assertFalse(user.getBooks().isEmpty());
 		assertEquals(1, user.getBooks().size());
+		assertTrue(userBooksSizeBefore >= 0);
+		assertTrue(userBooksSizeAfter >= 0);
+		assertEquals(userBooksSizeBefore, userBooksSizeAfter - 1);
 		assertTrue(quantityBefore >= 0);
 		assertTrue(quantityAfter >= 0);
 		assertEquals(quantityBefore, quantityAfter + 1);
 	}
-
+	
 	@Test
 	public void userShouldReturnABookToLibrary() {
 		// given
 		final BigDecimal bookId = BigDecimal.ONE;
-		final BigDecimal libraryId = BigDecimal.ONE;
+		final BigDecimal libraryId = new BigDecimal("3");
 		final BigDecimal userId = new BigDecimal("2");
 		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(bookId, libraryId);
 
 		final BookEntity book = bookDao.findOne(bookId);
 		final LibraryEntity library = libraryDao.findOne(libraryId);
-		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
 		UserEntity user = userDao.findOne(userId);
-		assumeNotNull(book,library,bookLibraryEntity,user);
+		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		assumeNotNull(book,bookLibraryEntity, library,user);
 		
 		final int quantityBefore = bookLibraryEntity.getQuantity();
+		final int userBooksSizeBefore = user.getBooks().size();
 		// when
 		try {
 			user = userDao.returnABookToLibrary(user, book, library);
@@ -134,11 +139,14 @@ public class UserDaoImplTest {
 		}
 		bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
 		assumeNotNull(bookLibraryEntity);
+
 		final int quantityAfter = bookLibraryEntity.getQuantity();
+		final int userBooksSizeAfter = user.getBooks().size();
 		// then
 		assertNotNull(user);
-		assertFalse(user.getBooks().isEmpty());
-		assertEquals(1, user.getBooks().size());
+		assertTrue(userBooksSizeBefore >= 0);
+		assertTrue(userBooksSizeAfter >= 0);
+		assertEquals(userBooksSizeBefore, userBooksSizeAfter + 1);
 		assertTrue(quantityBefore >= 0);
 		assertTrue(quantityAfter >= 0);
 		assertEquals(quantityBefore, quantityAfter - 1);

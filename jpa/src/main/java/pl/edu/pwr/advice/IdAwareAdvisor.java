@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import pl.edu.pwr.annotation.NullableId;
 import pl.edu.pwr.common.IdAware;
 import pl.edu.pwr.entity.BookLibraryEntity;
+import pl.edu.pwr.entity.UserBookLibraryEntity;
 import pl.edu.pwr.exception.NotNullIdException;
 
 @Aspect
@@ -54,7 +55,7 @@ public class IdAwareAdvisor {
 	@Before("nullableIdMethodExecution(object,nullableId)")
 	public void beforeNullableId(JoinPoint joinPoint, Object object, NullableId nullableId) throws Throwable {
 		logBeforeAdvice(joinPoint, object);
-		if ((object instanceof IdAware<?>) && !(object instanceof BookLibraryEntity)) {
+		if ((object instanceof IdAware<?>) && !(object instanceof BookLibraryEntity) && !(object instanceof UserBookLibraryEntity)) {
 			IdAware<?> idAware = (IdAware<?>) object;
 			checkNotNullId(idAware);
 		}

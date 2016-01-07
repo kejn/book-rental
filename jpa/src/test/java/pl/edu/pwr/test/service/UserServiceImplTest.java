@@ -18,6 +18,7 @@ import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.mapper.impl.AuthorMapper;
 import pl.edu.pwr.mapper.impl.BookMapper;
 import pl.edu.pwr.mapper.impl.LibraryMapper;
+import pl.edu.pwr.mapper.impl.UserBookLibraryMapper;
 import pl.edu.pwr.mapper.impl.UserMapper;
 import pl.edu.pwr.mapper.impl.BookLibraryMapper;
 import pl.edu.pwr.service.impl.UserServiceImpl;
@@ -31,7 +32,10 @@ public class UserServiceImplTest {
 	@InjectMocks
 	private UserServiceImpl userService;
 
-	private UserMapper userMapper = new UserMapper(new BookMapper(new AuthorMapper(), new BookLibraryMapper(new LibraryMapper())));
+	private LibraryMapper libraryMapper = new LibraryMapper();
+
+	private UserMapper userMapper = new UserMapper(new UserBookLibraryMapper(
+	    new BookMapper(new AuthorMapper(), new BookLibraryMapper(libraryMapper)), libraryMapper));
 
 	@Before
 	public void setUp() {
@@ -46,7 +50,8 @@ public class UserServiceImplTest {
 		final String userName = "user";
 		final String password = "password";
 		// when
-		Mockito.when(userDao.findUserEqualToNameVerifyPassword(Mockito.anyString(), Mockito.anyString())).thenReturn(new UserEntity(id, userName, password));
+		Mockito.when(userDao.findUserEqualToNameVerifyPassword(Mockito.anyString(), Mockito.anyString()))
+		    .thenReturn(new UserEntity(id, userName, password));
 		UserTo user = userService.findUserEqualToNameVerifyPassword(userName, password);
 		// then
 		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);

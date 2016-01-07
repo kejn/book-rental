@@ -13,9 +13,9 @@ public class UserTo implements IdAware<BigDecimal> {
 
 	private String password;
 
-	private Set<BookTo> books;
+	private Set<UserBookLibraryTo> books;
 
-	public UserTo(BigDecimal id, String name, String password, Set<BookTo> books) {
+	public UserTo(BigDecimal id, String name, String password, Set<UserBookLibraryTo> books) {
 		this.id = id;
 		this.name = name;
 		this.password = password;
@@ -47,11 +47,11 @@ public class UserTo implements IdAware<BigDecimal> {
 		this.password = password;
 	}
 
-	public Set<BookTo> getBooks() {
+	public Set<UserBookLibraryTo> getBooks() {
 		return books;
 	}
 
-	public void setBooks(Set<BookTo> books) {
+	public void setBooks(Set<UserBookLibraryTo> books) {
 		this.books = books;
 	}
 

@@ -51,8 +51,6 @@ public interface UserDao extends Dao<UserEntity, BigDecimal> {
 	 *          user who wants to return a book
 	 * @param book
 	 *          book which user wants to return
-	 * @param library
-	 *          library where user wants to return a book
 	 * @return updated user entity (assigned a new book)
 	 * 
 	 * @throws BookNotRentException
