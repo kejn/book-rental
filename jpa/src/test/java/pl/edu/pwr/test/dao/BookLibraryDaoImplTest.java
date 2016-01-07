@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class BookLibraryDaoImplTest {
 		// given
 		final BigDecimal bookId = BigDecimal.ONE;
 		final BigDecimal libraryId = BigDecimal.ONE;
-		final BookLibraryEntityId id = new BookLibraryEntityId(new BookEntity(bookId, null), new LibraryEntity(libraryId, null));
+		final BookLibraryEntityId id = new BookLibraryEntityId(bookId, libraryId);
 		// when
 		BookLibraryEntity library = bookLibraryDao.findOne(id);
 		// then
@@ -57,6 +58,7 @@ public class BookLibraryDaoImplTest {
 	public void shouldFindBookLibraryByLibrary() {
 		// given
 		final LibraryEntity library = libraryDao.findOne(BigDecimal.ONE);
+		assumeNotNull(library);
 		// when
 		List<BookLibraryEntity> libraries = new ArrayList<>(bookLibraryDao.findBookLibraryByLibrary(library));
 		// then
@@ -72,6 +74,7 @@ public class BookLibraryDaoImplTest {
 	public void shouldFindBookLibraryByBook() {
 		// given
 		final BookEntity book = bookDao.findOne(BigDecimal.ONE);
+		assumeNotNull(book);
 		// when
 		List<BookLibraryEntity> books = new ArrayList<>(bookLibraryDao.findBookLibraryByBook(book));
 		// then
@@ -94,8 +97,9 @@ public class BookLibraryDaoImplTest {
 
 		final LibraryEntity library = libraryDao.findOne(libraryId);
 		final BookEntity book = bookDao.findOne(bookId);
-		
 		BookLibraryEntity bookLibrary = bookLibraryDao.findOne(id);
+		assumeNotNull(library, book, bookLibrary);
+		
 		final int quantityBefore = bookLibrary.getQuantity();
 		// when
 		bookLibrary = bookLibraryDao.addBookToLibrary(book, library);

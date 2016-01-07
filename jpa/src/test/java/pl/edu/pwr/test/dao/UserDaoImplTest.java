@@ -1,6 +1,11 @@
 package pl.edu.pwr.test.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeNotNull;
 
 import java.math.BigDecimal;
 
@@ -22,6 +27,7 @@ import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.exception.BookAlreadyRentException;
 import pl.edu.pwr.exception.BookNotAvailableException;
+import pl.edu.pwr.exception.BookNotRentException;
 import pl.edu.pwr.test.config.DataAccessTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,7 +39,7 @@ public class UserDaoImplTest {
 
 	@Autowired
 	private BookDao bookDao;
-	
+
 	@Autowired
 	private LibraryDao libraryDao;
 
@@ -76,32 +82,64 @@ public class UserDaoImplTest {
 		final BigDecimal bookId = BigDecimal.ONE;
 		final BigDecimal libraryId = BigDecimal.ONE;
 		final BigDecimal userId = BigDecimal.ONE;
-		
+		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(bookId, libraryId);
+
 		final BookEntity book = bookDao.findOne(bookId);
 		final LibraryEntity library = libraryDao.findOne(libraryId);
-		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(book, library);
-		
 		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
-		final int quantityBefore = bookLibraryEntity.getQuantity();
-		
 		UserEntity user = userDao.findOne(userId);
+		assumeNotNull(book,library,bookLibraryEntity,user);
+		
+		final int quantityBefore = bookLibraryEntity.getQuantity();
 		// when
 		try {
 			user = userDao.rentUserABook(user, book, library);
-		
-			bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
-			final int quantityAfter = bookLibraryEntity.getQuantity();
-
-			// then
-			assertNotNull(user);
-			assertFalse(user.getBooks().isEmpty());
-			assertEquals(1, user.getBooks().size());
-			assertTrue(quantityBefore >= 0);
-			assertTrue(quantityAfter >= 0);
-			assertEquals(quantityBefore, quantityAfter + 1);
 		} catch (BookAlreadyRentException | BookNotAvailableException e) {
 			fail(e.getMessage());
 		}
+		bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		assumeNotNull(bookLibraryEntity);
+		final int quantityAfter = bookLibraryEntity.getQuantity();
+
+		// then
+		assertNotNull(user);
+		assertFalse(user.getBooks().isEmpty());
+		assertEquals(1, user.getBooks().size());
+		assertTrue(quantityBefore >= 0);
+		assertTrue(quantityAfter >= 0);
+		assertEquals(quantityBefore, quantityAfter + 1);
 	}
 
+	@Test
+	public void userShouldReturnABookToLibrary() {
+		// given
+		final BigDecimal bookId = BigDecimal.ONE;
+		final BigDecimal libraryId = BigDecimal.ONE;
+		final BigDecimal userId = new BigDecimal("2");
+		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(bookId, libraryId);
+
+		final BookEntity book = bookDao.findOne(bookId);
+		final LibraryEntity library = libraryDao.findOne(libraryId);
+		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		UserEntity user = userDao.findOne(userId);
+		assumeNotNull(book,library,bookLibraryEntity,user);
+		
+		final int quantityBefore = bookLibraryEntity.getQuantity();
+		// when
+		try {
+			user = userDao.returnABookToLibrary(user, book, library);
+		} catch (BookNotRentException e) {
+			fail(e.getMessage());
+		}
+		bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		assumeNotNull(bookLibraryEntity);
+		final int quantityAfter = bookLibraryEntity.getQuantity();
+		// then
+		assertNotNull(user);
+		assertFalse(user.getBooks().isEmpty());
+		assertEquals(1, user.getBooks().size());
+		assertTrue(quantityBefore >= 0);
+		assertTrue(quantityAfter >= 0);
+		assertEquals(quantityBefore, quantityAfter - 1);
+	}
 }

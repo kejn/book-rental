@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -126,6 +127,7 @@ public class BookDaoImplTest {
 		// given
 		final BigDecimal id = new BigDecimal("3");
 		final BookEntity book = bookDao.findOne(id);
+		assumeNotNull(book);
 		// when
 		bookDao.delete(book);
 		boolean bookExistsInDatabase = bookDao.exists(id);

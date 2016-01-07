@@ -17,6 +17,7 @@ import pl.edu.pwr.entity.QUserEntity;
 import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.exception.BookAlreadyRentException;
 import pl.edu.pwr.exception.BookNotAvailableException;
+import pl.edu.pwr.exception.BookNotRentException;
 
 @Component
 public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal> implements UserDao {
@@ -46,25 +47,38 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		checkIfArgumentIsNull(book, "book");
 		checkIfArgumentIsNull(library, "library");
 
-		checkIfUserHasAlreadyRentABook(user, book);
+		if(user.getBooks().contains(book)) {
+			throw new BookAlreadyRentException();
+		}
+
 		BookLibraryEntityId id = new BookLibraryEntityId(book, library);
 		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(id);
 
 		if(bookLibraryEntity.getQuantity() == 0) {
 			throw new BookNotAvailableException();
 		}
-		bookLibraryEntity.setQuantity(bookLibraryEntity.getQuantity() - 1);
-		bookLibraryDao.update(bookLibraryEntity);
+		bookLibraryDao.removeBookFromLibrary(book, library);
 		
 		user.addBooks(book);
 		user = update(user);
 		return user;
 	}
 
-	private void checkIfUserHasAlreadyRentABook(UserEntity user, BookEntity book) throws BookAlreadyRentException {
-		if(user.getBooks().contains(book)) {
-			throw new BookAlreadyRentException();
+	@Override
+	public UserEntity returnABookToLibrary(UserEntity user, BookEntity book, LibraryEntity library)
+	    throws BookNotRentException {
+		checkIfArgumentIsNull(user, "user");
+		checkIfArgumentIsNull(book, "book");
+		checkIfArgumentIsNull(library, "library");
+		
+		if(!user.getBooks().contains(book)) {
+			throw new BookNotRentException();
 		}
+		bookLibraryDao.addBookToLibrary(book, library);
+		
+		user.addBooks(book);
+		user = update(user);
+		return user;
 	}
 
 }

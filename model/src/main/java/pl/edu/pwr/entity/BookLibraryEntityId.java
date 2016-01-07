@@ -1,6 +1,7 @@
 package pl.edu.pwr.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class BookLibraryEntityId implements Serializable {
 	
@@ -16,6 +17,11 @@ public class BookLibraryEntityId implements Serializable {
 	public BookLibraryEntityId(BookEntity bookId, LibraryEntity libraryId) {
 		this.book = bookId;
 		this.library = libraryId;
+	}
+
+	public BookLibraryEntityId(BigDecimal bookId, BigDecimal libraryId) {
+		this.book = new BookEntity(bookId);
+		this.library = new LibraryEntity(libraryId);
 	}
 
 	@Override

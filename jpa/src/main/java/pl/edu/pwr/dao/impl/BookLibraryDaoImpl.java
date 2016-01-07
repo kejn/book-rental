@@ -14,6 +14,7 @@ import pl.edu.pwr.entity.BookLibraryEntity;
 import pl.edu.pwr.entity.BookLibraryEntityId;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.entity.QBookLibraryEntity;
+import pl.edu.pwr.exception.BookNotAvailableException;
 
 @Component
 public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibraryEntity, BookLibraryEntityId>
@@ -77,6 +78,17 @@ public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibr
 		BookLibraryEntity bookLibrary = new BookLibraryEntity(book, library, 0);
 		int quantityBefore = findOne(bookLibrary.getId()).getQuantity();
 		bookLibrary.setQuantity(quantityBefore + 1);
+		return update(bookLibrary);
+	}
+
+	@Override
+	public BookLibraryEntity removeBookFromLibrary(BookEntity book, LibraryEntity library) throws BookNotAvailableException {
+		BookLibraryEntity bookLibrary = new BookLibraryEntity(book, library, 0);
+		int quantityBefore = findOne(bookLibrary.getId()).getQuantity();
+		if(quantityBefore == 0) {
+			throw new BookNotAvailableException();
+		}
+		bookLibrary.setQuantity(quantityBefore - 1);
 		return update(bookLibrary);
 	}
 

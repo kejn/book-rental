@@ -31,9 +31,24 @@ public class LibraryEntity implements IdAware<BigDecimal> {
 	protected LibraryEntity() {
 	}
 
+	/**
+	 * Creates entity by assigning member fields <b>id</b> and <b>name</b>.
+
+	 * @param id
+	 *          id in database
+	 * @param name
+	 *          library name
+	 */
 	public LibraryEntity(BigDecimal id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+
+	/**
+	 * For BookLibraryMapper
+	 */
+	public LibraryEntity(BigDecimal libraryId) {
+		this.id = libraryId;
 	}
 
 	@Override

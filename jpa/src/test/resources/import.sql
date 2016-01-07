@@ -21,9 +21,11 @@ insert into LIBRARIES (id, name) values (null, 'Biblioteka we Wrocławiu');
 insert into LIBRARIES (id, name) values (null, 'Biblioteka w Poznaniu');
 insert into LIBRARIES (id, name) values (null, 'Biblioteka w Warszawie');
 
-insert into BOOK_LIBRARY (book, library, quantity) values (1, 1, 1);
-insert into BOOK_LIBRARY (book, library, quantity) values (2, 2, 1);
-insert into BOOK_LIBRARY (book, library, quantity) values (3, 3, 1);
+insert into BOOK_LIBRARY (book_id, library_id, quantity) values (1, 1, 3);
+insert into BOOK_LIBRARY (book_id, library_id, quantity) values (2, 2, 1);
+insert into BOOK_LIBRARY (book_id, library_id, quantity) values (3, 3, 1);
 
 insert into USERS (id, name, password) values (null, 'user', 'sup3R$ecre7P4$$word');
 insert into USERS (id, name, password) values (null, 'userUpdateCheck', '12345678');
+
+insert into USER_BOOK (user_id, book_id) values(2, 1);
