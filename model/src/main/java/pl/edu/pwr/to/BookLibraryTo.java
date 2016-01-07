@@ -6,20 +6,14 @@ public class BookLibraryTo {
 
 	private BigDecimal bookId;
 
-	private BigDecimal libraryId;
+	private LibraryTo library;
 
 	private int quantity;
 
-	private BookTo book;
-
-	private LibraryTo library;
-
-	public BookLibraryTo(BookTo bookTo, LibraryTo library, int quantity) {
-		this.bookId = bookTo.getId();
-		this.libraryId = library.getId();
-		this.quantity = quantity;
-		this.book = bookTo;
+	public BookLibraryTo(BigDecimal bookId, LibraryTo library, int quantity) {
+		this.bookId = bookId;
 		this.library = library;
+		this.quantity = quantity;
 	}
 
 	public BigDecimal getBookId() {
@@ -31,27 +25,11 @@ public class BookLibraryTo {
 	}
 
 	public BigDecimal getLibraryId() {
-		return libraryId;
+		return library.getId();
 	}
 
 	public void setLibraryId(BigDecimal libraryId) {
-		this.libraryId = libraryId;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	public BookTo getBook() {
-		return book;
-	}
-
-	public void setBook(BookTo book) {
-		this.book = book;
+		this.library.setId(libraryId);
 	}
 
 	public LibraryTo getLibrary() {
@@ -60,6 +38,14 @@ public class BookLibraryTo {
 
 	public void setLibrary(LibraryTo library) {
 		this.library = library;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 }

@@ -22,6 +22,8 @@ insert into LIBRARIES (id, name) values (null, 'Biblioteka w Poznaniu');
 insert into LIBRARIES (id, name) values (null, 'Biblioteka w Warszawie');
 
 insert into BOOK_LIBRARY (book_id, library_id, quantity) values (1, 1, 3);
+insert into BOOK_LIBRARY (book_id, library_id, quantity) values (1, 2, 1);
+insert into BOOK_LIBRARY (book_id, library_id, quantity) values (1, 3, 1);
 insert into BOOK_LIBRARY (book_id, library_id, quantity) values (2, 2, 1);
 insert into BOOK_LIBRARY (book_id, library_id, quantity) values (3, 3, 1);
 

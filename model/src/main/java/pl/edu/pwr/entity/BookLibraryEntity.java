@@ -20,17 +20,17 @@ public class BookLibraryEntity implements IdAware<BookLibraryEntityId> {
 
 	protected static final String tableName = "BOOK_LIBRARY";
 
-	@Column
+	@Column(nullable = false)
 	private int quantity;
 
 	@Id
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = BookEntity.referenceBookIdColumnName, referencedColumnName = "ID", nullable = false, unique = true)
+	@JoinColumn(name = BookEntity.referenceBookIdColumnName, referencedColumnName = "ID", nullable = false, unique = false)
 	private BookEntity book;
 
 	@Id
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = LibraryEntity.referenceLibraryIdColumnName, nullable = false, unique = true)
+	@JoinColumn(name = LibraryEntity.referenceLibraryIdColumnName, nullable = false, unique = false)
 	private LibraryEntity library;
 
 	protected BookLibraryEntity() {
@@ -44,6 +44,20 @@ public class BookLibraryEntity implements IdAware<BookLibraryEntityId> {
 
 	public boolean isBookAvailable() {
 		return quantity > 0;
+	}
+	
+	@Override
+	public int hashCode() {
+		return getId().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof BookLibraryEntity) {
+			BookLibraryEntity bookLibrary = (BookLibraryEntity) obj;
+			return bookLibrary.getId().equals(getId()) && bookLibrary.getQuantity() == getQuantity();
+		}
+		return false;
 	}
 
 	@Override

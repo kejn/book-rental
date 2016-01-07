@@ -11,7 +11,6 @@ import pl.edu.pwr.entity.BookEntity;
 import pl.edu.pwr.entity.BookLibraryEntity;
 import pl.edu.pwr.mapper.Mapper;
 import pl.edu.pwr.to.BookLibraryTo;
-import pl.edu.pwr.to.BookTo;
 
 @Component
 public class BookLibraryMapper implements Mapper<BookLibraryTo, BookLibraryEntity> {
@@ -28,7 +27,7 @@ public class BookLibraryMapper implements Mapper<BookLibraryTo, BookLibraryEntit
 	
 	@Override
 	public BookLibraryTo map2To(BookLibraryEntity entity) {
-		return new BookLibraryTo(new BookTo(entity.getBookId()), libraryMapper.map2To(entity.getLibrary()), entity.getQuantity());
+		return new BookLibraryTo(entity.getBookId(), libraryMapper.map2To(entity.getLibrary()), entity.getQuantity());
 	}
 
 	@Override

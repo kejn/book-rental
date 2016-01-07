@@ -26,7 +26,7 @@ public class BookLibraryEntityId implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return book.getId().intValue() + library.getId().intValue();
+		return book.hashCode() + library.hashCode();
 	}
 
 	@Override

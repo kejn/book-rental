@@ -5,7 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeNotNull;
+import static org.junit.Assume.*;
+
 
 import java.math.BigDecimal;
 
@@ -77,7 +78,7 @@ public class UserDaoImplTest {
 	 * 
 	 */
 	@Test
-	public void shouldRentUserABook() {
+	public void userShouldRentABook() {
 		// given
 		final BigDecimal bookId = BigDecimal.ONE;
 		final BigDecimal libraryId = BigDecimal.ONE;

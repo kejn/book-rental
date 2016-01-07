@@ -67,6 +67,7 @@ public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibr
 
 	@Override
 	public void deleteBookLibraryByBook(BookEntity book) {
+		checkIfArgumentIsNull(book, "book");
 		List<BookLibraryEntity> references = new ArrayList<>(findBookLibraryByBook(book));
 		for (BookLibraryEntity bookLibraryEntity: references) {
 			delete(bookLibraryEntity);
@@ -75,19 +76,30 @@ public class BookLibraryDaoImpl extends AbstractDao<BookLibraryEntity, QBookLibr
 
 	@Override
 	public BookLibraryEntity addBookToLibrary(BookEntity book, LibraryEntity library) {
-		BookLibraryEntity bookLibrary = new BookLibraryEntity(book, library, 0);
-		int quantityBefore = findOne(bookLibrary.getId()).getQuantity();
+		checkIfArgumentIsNull(book, "book");
+		checkIfArgumentIsNull(library, "library");
+
+		final BookLibraryEntityId id = new BookLibraryEntityId(book, library);
+		BookLibraryEntity bookLibrary = findOne(id);
+		int quantityBefore = bookLibrary.getQuantity();
 		bookLibrary.setQuantity(quantityBefore + 1);
 		return update(bookLibrary);
 	}
 
 	@Override
-	public BookLibraryEntity removeBookFromLibrary(BookEntity book, LibraryEntity library) throws BookNotAvailableException {
-		BookLibraryEntity bookLibrary = new BookLibraryEntity(book, library, 0);
-		int quantityBefore = findOne(bookLibrary.getId()).getQuantity();
-		if(quantityBefore == 0) {
+	public BookLibraryEntity removeBookFromLibrary(BookEntity book, LibraryEntity library)
+	    throws BookNotAvailableException {
+		checkIfArgumentIsNull(book, "book");
+		checkIfArgumentIsNull(library, "library");
+
+		final BookLibraryEntityId id = new BookLibraryEntityId(book, library);
+		BookLibraryEntity bookLibrary = findOne(id);
+
+		if (!bookLibrary.isBookAvailable()) {
 			throw new BookNotAvailableException();
 		}
+
+		int quantityBefore = bookLibrary.getQuantity();
 		bookLibrary.setQuantity(quantityBefore - 1);
 		return update(bookLibrary);
 	}

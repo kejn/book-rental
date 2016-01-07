@@ -24,7 +24,7 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 
 	@Autowired
 	private BookLibraryDao bookLibraryDao;
-	
+
 	@Override
 	protected void setQEntity() {
 		qEntity = QUserEntity.userEntity;
@@ -47,18 +47,17 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		checkIfArgumentIsNull(book, "book");
 		checkIfArgumentIsNull(library, "library");
 
-		if(user.getBooks().contains(book)) {
+		if (user.getBooks().contains(book)) {
 			throw new BookAlreadyRentException();
 		}
 
 		BookLibraryEntityId id = new BookLibraryEntityId(book, library);
 		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(id);
 
-		if(bookLibraryEntity.getQuantity() == 0) {
+		if (!bookLibraryEntity.isBookAvailable()) {
 			throw new BookNotAvailableException();
 		}
 		bookLibraryDao.removeBookFromLibrary(book, library);
-		
 		user.addBooks(book);
 		user = update(user);
 		return user;
@@ -70,12 +69,12 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		checkIfArgumentIsNull(user, "user");
 		checkIfArgumentIsNull(book, "book");
 		checkIfArgumentIsNull(library, "library");
-		
-		if(!user.getBooks().contains(book)) {
+
+		if (!user.getBooks().contains(book)) {
 			throw new BookNotRentException();
 		}
 		bookLibraryDao.addBookToLibrary(book, library);
-		
+
 		user.addBooks(book);
 		user = update(user);
 		return user;
