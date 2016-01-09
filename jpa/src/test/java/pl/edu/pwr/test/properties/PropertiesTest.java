@@ -1,6 +1,6 @@
 package pl.edu.pwr.test.properties;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +10,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import pl.edu.pwr.config.DatabaseConfig;
-import pl.edu.pwr.test.config.DataAccessTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DataAccessTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = DatabaseConfig.class, loader = AnnotationConfigContextLoader.class)
 public class PropertiesTest {
 
 	@Autowired

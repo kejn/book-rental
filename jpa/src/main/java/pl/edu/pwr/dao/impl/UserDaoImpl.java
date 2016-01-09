@@ -28,13 +28,13 @@ import pl.edu.pwr.exception.BookNotRentException;
 public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal> implements UserDao {
 
 	@Autowired
-	private BookLibraryDao bookLibraryDao;
-	
-	@Autowired
 	private BookDao bookDao;
 
 	@Autowired
 	private LibraryDao libraryDao;
+
+	@Autowired
+	private BookLibraryDao bookLibraryDao;
 	
 	@Autowired
 	private UserBookLibraryDao userBookLibraryDao;
@@ -61,7 +61,7 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		checkIfArgumentIsNull(book, "book");
 		checkIfArgumentIsNull(library, "library");
 
-		final UserBookLibraryEntity userBookLibrary = new UserBookLibraryEntity(user, book, library.getId());
+		final UserBookLibraryEntity userBookLibrary = new UserBookLibraryEntity(user, book, library);
 		if (user.getBooks().contains(userBookLibrary)) {
 			throw new BookAlreadyRentException();
 		}
@@ -75,10 +75,11 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		bookLibraryDao.removeBookFromLibrary(book, library);
 		
 		book = bookDao.update(book);
+		library = libraryDao.update(library);
 		user = update(user);
 		
-		userBookLibraryDao.save(new UserBookLibraryEntity(user, book, library.getId()));
-		user.addBook(book, library.getId());
+		userBookLibraryDao.save(new UserBookLibraryEntity(user, book, library));
+		user.addBook(book, library);
 		user = update(user);
 		return user;
 	}
@@ -89,7 +90,7 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		checkIfArgumentIsNull(book, "book");
 		checkIfArgumentIsNull(library, "library");
 
-		UserBookLibraryEntityId id = new UserBookLibraryEntityId(user, book, library.getId());
+		UserBookLibraryEntityId id = new UserBookLibraryEntityId(user, book, library);
 		UserBookLibraryEntity userBookLibrary = userBookLibraryDao.findOne(id);
 		
 		if (userBookLibrary == null) {

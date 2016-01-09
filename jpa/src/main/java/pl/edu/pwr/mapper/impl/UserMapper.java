@@ -26,6 +26,10 @@ public class UserMapper implements Mapper<UserTo, UserEntity> {
 	
 	@Override
 	public UserTo map2To(UserEntity entity) {
+		entity.getId();
+		entity.getName();
+		entity.getName();
+		entity.getBooks();
 		return new UserTo(entity.getId(), entity.getName(), entity.getPassword(),
 		    userBookLibraryMapper.map2To(entity.getBooks()).stream().collect(Collectors.toSet()));
 	}

@@ -74,7 +74,6 @@ public class UserDaoImplTest {
 	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()},
 	 * {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById()} and
 	 * {@link pl.edu.pwr.test.dao.BookLibraryDaoImplTest#shouldFindBookLibraryByBookLibraryEntityId()}
-	 * 
 	 */
 	@Test
 	public void userShouldRentABook() {
@@ -115,6 +114,12 @@ public class UserDaoImplTest {
 		assertEquals(quantityBefore, quantityAfter + 1);
 	}
 	
+	/**
+	!!! depends on {@link #shouldFindUserById()},
+	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()},
+	 * {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById()} and
+	 * {@link pl.edu.pwr.test.dao.BookLibraryDaoImplTest#shouldFindBookLibraryByBookLibraryEntityId()}
+	 */
 	@Test
 	public void userShouldReturnABookToLibrary() {
 		// given

@@ -119,7 +119,7 @@ public class BookEntity implements IdAware<BigDecimal> {
 
 	@Override
 	public int hashCode() {
-		return id == null ? 0 : id.intValue();
+		return id == null ? 0 : id.hashCode();
 	}
 
 	@Override

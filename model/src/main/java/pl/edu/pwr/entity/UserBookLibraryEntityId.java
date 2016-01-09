@@ -11,26 +11,26 @@ public class UserBookLibraryEntityId implements Serializable {
 
 	private BookEntity book;
 
-	private BigDecimal libraryId;
+	private LibraryEntity library;
 
 	protected UserBookLibraryEntityId() {
 	}
 
-	public UserBookLibraryEntityId(UserEntity userId, BookEntity bookId, BigDecimal library) {
+	public UserBookLibraryEntityId(UserEntity userId, BookEntity bookId, LibraryEntity library) {
 		this.user = userId;
 		this.book = bookId;
-		this.libraryId = library;
+		this.library = library;
 	}
 
 	public UserBookLibraryEntityId(BigDecimal userId, BigDecimal bookId, BigDecimal libraryId) {
 		this.user = new UserEntity(userId);
 		this.book = new BookEntity(bookId);
-		this.libraryId = libraryId;
+		this.library = new LibraryEntity(libraryId);
 	}
 
 	@Override
 	public int hashCode() {
-		return user.hashCode() + book.hashCode() + libraryId.hashCode();
+		return user.hashCode() + book.hashCode() + library.hashCode();
 	}
 
 	@Override
@@ -38,14 +38,14 @@ public class UserBookLibraryEntityId implements Serializable {
 		if (obj instanceof UserBookLibraryEntityId) {
 			UserBookLibraryEntityId id = (UserBookLibraryEntityId) obj;
 			return id.user.getId().equals(user.getId()) && id.book.getId().equals(book.getId())
-			    && id.libraryId.equals(libraryId);
+			    && id.library.equals(library);
 		}
 		return false;
 	}
 
 	@Override
 	public String toString() {
-		return "user: " + user.getId() + ", book: " + book.getId() + ", library: " + libraryId;
+		return "user: " + user.getId() + ", book: " + book.getId() + ", library: " + library;
 	}
 	
 	public UserEntity getUser() {
@@ -64,12 +64,12 @@ public class UserBookLibraryEntityId implements Serializable {
 		this.book = book;
 	}
 
-	public BigDecimal getLibraryId() {
-		return libraryId;
+	public LibraryEntity getLibrary() {
+		return library;
 	}
 
-	public void setLibraryId(BigDecimal library) {
-		this.libraryId = library;
+	public void setLibrary(LibraryEntity library) {
+		this.library = library;
 	}
 
 }

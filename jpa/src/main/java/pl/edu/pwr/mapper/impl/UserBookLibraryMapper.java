@@ -18,27 +18,27 @@ public class UserBookLibraryMapper implements Mapper<UserBookLibraryTo, UserBook
 	@Autowired
 	private BookMapper bookMapper;
 
-//	@Autowired
-//	private LibraryMapper libraryMapper;
+	@Autowired
+	private LibraryMapper libraryMapper;
 
 	protected UserBookLibraryMapper() {
 	}
 
 	public UserBookLibraryMapper(BookMapper bookMapper, LibraryMapper libraryMapper) {
 		this.bookMapper = bookMapper;
-//		this.libraryMapper = libraryMapper;
+		this.libraryMapper = libraryMapper;
 	}
 
 	@Override
 	public UserBookLibraryTo map2To(UserBookLibraryEntity entity) {
 		return new UserBookLibraryTo(entity.getUserId(), bookMapper.map2To(entity.getBook()),
-		    entity.getLibraryId());
+		    libraryMapper.map2To(entity.getLibrary()));
 	}
 
 	@Override
 	public UserBookLibraryEntity map2Entity(UserBookLibraryTo to) {
 		return new UserBookLibraryEntity(new UserEntity(to.getUserId()), bookMapper.map2Entity(to.getBook()),
-		    to.getLibraryId());
+				libraryMapper.map2Entity(to.getLibrary()));
 	}
 
 	@Override

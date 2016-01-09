@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -55,7 +54,7 @@ public class UserEntity implements IdAware<BigDecimal> {
 		this.name = name;
 		this.password = password;
 	}
-	
+
 	/**
 	 * For UserBookLibrary
 	 */
@@ -63,15 +62,15 @@ public class UserEntity implements IdAware<BigDecimal> {
 		this.id = userId;
 	}
 
-	public void addBook(BookEntity book, BigDecimal library) {
+	public void addBook(BookEntity book, LibraryEntity library) {
 		this.books.add(new UserBookLibraryEntity(this, book, library));
 	}
 
 	public boolean removeBook(UserBookLibraryEntity userBookLibrary) {
 		Iterator<UserBookLibraryEntity> iterator = this.books.iterator();
 		boolean removed = false;
-		while(iterator.hasNext()) {
-			if(iterator.next().equals(userBookLibrary)) {
+		while (iterator.hasNext()) {
+			if (iterator.next().equals(userBookLibrary)) {
 				iterator.remove();
 				removed = true;
 				break;
@@ -87,6 +86,21 @@ public class UserEntity implements IdAware<BigDecimal> {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof UserEntity) {
+			UserEntity user = (UserEntity) obj;
+			return user.getId().equals(id) && user.getName().equals(name) && user.getPassword().equals(password)
+			    && user.getBooks().containsAll(books);
+		}
+		return false;
 	}
 
 	@Override

@@ -8,9 +8,9 @@ public class UserBookLibraryTo {
 
 	private BookTo book;
 
-	private BigDecimal library;
+	private LibraryTo library;
 
-	public UserBookLibraryTo(BigDecimal userId, BookTo book, BigDecimal library) {
+	public UserBookLibraryTo(BigDecimal userId, BookTo book, LibraryTo library) {
 		this.userId = userId;
 		this.book = book;
 		this.library = library;
@@ -33,11 +33,11 @@ public class UserBookLibraryTo {
 	}
 
 	public BigDecimal getLibraryId() {
-		return library;
+		return library.getId();
 	}
 
 	public void setLibraryId(BigDecimal libraryId) {
-		this.library = libraryId;
+		this.library.setId(libraryId);
 	}
 
 	public BookTo getBook() {
@@ -46,6 +46,14 @@ public class UserBookLibraryTo {
 	
 	public void setBook(BookTo book) {
 		this.book = book;
+	}
+
+	public LibraryTo getLibrary() {
+		return library;
+	}
+
+	public void setLibrary(LibraryTo library) {
+		this.library = library;
 	}
 	
 }

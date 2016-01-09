@@ -2,9 +2,7 @@ package pl.edu.pwr.entity;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -31,21 +29,22 @@ public class UserBookLibraryEntity implements IdAware<UserBookLibraryEntityId> {
 	private BookEntity book;
 
 	@Id
-	@Column(name = LibraryEntity.referenceLibraryIdColumnName, nullable = false, unique = false, updatable = false)
-	private BigDecimal libraryId;
+	@ManyToOne
+	@JoinColumn(name = LibraryEntity.referenceLibraryIdColumnName, nullable = false, unique = false, updatable = false)
+	private LibraryEntity library;
 
 	protected UserBookLibraryEntity() {
 	}
 
-	public UserBookLibraryEntity(UserEntity user, BookEntity book, BigDecimal library) {
+	public UserBookLibraryEntity(UserEntity user, BookEntity book, LibraryEntity library) {
 		this.user = user;
 		this.book = book;
-		this.libraryId = library;
+		this.library = library;
 	}
 
 	@Override
 	public String toString() {
-		return "user: " + user.getId() + ", book: " + book.getId() + ", library: " + libraryId;
+		return "user: " + user.getId() + ", book: " + book.getId() + ", library: " + library.getId();
 	}
 	
 	@Override
@@ -64,7 +63,7 @@ public class UserBookLibraryEntity implements IdAware<UserBookLibraryEntityId> {
 
 	@Override
 	public UserBookLibraryEntityId getId() {
-		return new UserBookLibraryEntityId(user, book, libraryId);
+		return new UserBookLibraryEntityId(user, book, library);
 	}
 
 	public BigDecimal getUserId() {
@@ -84,11 +83,11 @@ public class UserBookLibraryEntity implements IdAware<UserBookLibraryEntityId> {
 	}
 
 	public BigDecimal getLibraryId() {
-		return libraryId;
+		return library.getId();
 	}
 
 	public void setLibraryId(BigDecimal libraryId) {
-		this.libraryId = libraryId;
+		this.library.setId(libraryId);
 	}
 
 	public UserEntity getUser() {
@@ -105,6 +104,14 @@ public class UserBookLibraryEntity implements IdAware<UserBookLibraryEntityId> {
 
 	public void setBook(BookEntity book) {
 		this.book = book;
+	}
+
+	public LibraryEntity getLibrary() {
+		return library;
+	}
+
+	public void setLibrary(LibraryEntity library) {
+		this.library = library;
 	}
 
 }
