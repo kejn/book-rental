@@ -46,4 +46,9 @@ public class BookServiceImpl implements BookService {
 		return bookMapper.map2To(bookDao.save(bookToSaveByDao));
 	}
 
+	@Override
+	public List<BookTo> findBooksByTitleAuthorLibrary(String bookTitle, String bookAuthor, String bookLibrary) {
+		return bookMapper.map2To(bookDao.findBooksByTitleAuthorLibrary(bookTitle,bookAuthor,bookLibrary));
+	}
+
 }

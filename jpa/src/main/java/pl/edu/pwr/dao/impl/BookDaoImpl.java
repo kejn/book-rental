@@ -1,6 +1,7 @@
 package pl.edu.pwr.dao.impl;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,29 @@ public class BookDaoImpl extends AbstractDao<BookEntity, QBookEntity, BigDecimal
 		prepareQueryVariables();
 		return query.from(qEntity).where(qEntity.libraries.any().library.name.containsIgnoreCase(libraryName))
 		    .list(qEntity);
+	}
+
+	@Override
+	public Collection<BookEntity> findBooksByTitleAuthorLibrary(String bookTitle, String bookAuthor, String bookLibrary) {
+		prepareQueryVariables();
+		BooleanBuilder builder = new BooleanBuilder();
+		if(!stringIsNullOrEmpty(bookTitle)) {
+			builder.and(qEntity.title.containsIgnoreCase(bookTitle));
+		}
+		if(!stringIsNullOrEmpty(bookAuthor)) {
+			BooleanBuilder builderAuthor = new BooleanBuilder();
+			builderAuthor.or(qEntity.authors.any().firstName.startsWithIgnoreCase(bookAuthor));
+			builderAuthor.or(qEntity.authors.any().lastName.startsWithIgnoreCase(bookAuthor));
+			builder.and(builderAuthor);
+		}
+		if(!stringIsNullOrEmpty(bookLibrary)) {
+			builder.and(qEntity.libraries.any().library.name.containsIgnoreCase(bookLibrary));
+		}
+		return query.from(qEntity).where(builder).list(qEntity);
+	}
+	
+	private boolean stringIsNullOrEmpty(String param) {
+		return param == null || param.isEmpty();
 	}
 
 }

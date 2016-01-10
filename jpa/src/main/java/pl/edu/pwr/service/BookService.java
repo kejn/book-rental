@@ -22,4 +22,6 @@ public interface BookService {
 
 	public BookTo save(BookTo book);
 
+	public List<BookTo> findBooksByTitleAuthorLibrary(String bookTitle, String bookAuthor, String bookLibrary);
+
 }

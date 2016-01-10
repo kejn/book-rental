@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head lang="en">
+<meta charset="UTF-8" />
+</head>
+<body>
+
+  <div th:fragment="nav">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>                        
+          </button>   
+          <a class="navbar-brand" th:href="@{/home}">book-rental</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li id="homeHyperlink"><a th:href="@{/home}">
+              <span class="glyphicon glyphicon-home"></span> Strona główna</a>
+            </li>
+            <li id="booksHyperlink"><a th:href="@{/books}">
+              <span class="glyphicon glyphicon-th-list"></span> Lista książek</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:fragment="navdetails">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>                        
+          </button>   
+          <a class="navbar-brand" th:href="@{/home}">car-rental</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li id="homeHyperlink"><a th:href="@{/home}">
+              <span class="glyphicon glyphicon-home"></span> Strona główna</a>
+            </li>
+            <li id="carsHyperlink"><a th:href="@{/cars}">
+              <span class="glyphicon glyphicon-th-list"></span> Lista samochodów</a>
+            </li>
+            <li class="active"><a href="#">
+              <span class="glyphicon glyphicon-list-alt"></span> Szczegóły</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:fragment="search">
+    <script th:inline="javascript">
+    $(document).ready(function() {
+      var form = $("form[name='search']"); 
+    
+      $("#clearTitle").click(function() {
+        $("#bookTitle").val("");
+        form.submit();
+      });
+      $("#clearAuthor").click(function() {
+        $("#bookAuthor").val("");
+        form.submit();
+      });
+      $("#clearLibrary").click(function() {
+        $("#bookLibrary").prop("selectedIndex", 0);
+        form.submit();
+      });
+    });
+    </script>
+    <div class="container" style="margin-bottom: 20px;">
+      <form class="form-inline" th:with="libX = ${bookLibrary} == null or ${bookLibrary} == ''">
+        <div class="form-group form-group-sm">
+          <label for="bookTitle">Tytuł książki:</label>
+          <input id="bookTitle" type="text" name="bookTitle" th:value="${bookTitle}" class="form-control" />
+          <span th:unless="${bookTitle} == null or ${bookTitle} == ''">
+            <button id="clearTitle" class="btn btn-xs btn-danger">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+          </span> 
+        </div>
+        <div class="form-group  form-group-sm">
+          <label for="bookAuthor">Autor:</label>
+          <input id="bookAuthor" type="text" name="bookAuthor" th:value="${bookAuthor}" class="form-control" />
+          <span th:unless="${bookAuthor} == null or ${bookAuthor} == ''">
+            <button id="clearAuthor" class="btn btn-xs btn-danger">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+          </span>
+        </div>
+        <div class="form-group form-group-sm">
+          <label for="bookLibrary">Biblioteka:</label>
+          <select id="bookLibrary" name="bookLibrary" onchange="this.form.submit()" class="form-control">
+            <option label="* (Wszystkie biblioteki)" value="" th:selected="${libX}">* (Wszystkie biblioteki)</option>
+            <option th:each="library : ${libraries}" th:text="${library.name}" th:value="${library.name}" th:selected="${bookLibrary} == ${library.name}" />
+          </select>
+          <span th:unless="${libX}">
+	          <button id="clearLibrary" class="btn btn-xs btn-danger">
+	            <span class="glyphicon glyphicon-remove"></span>
+	          </button>
+          </span>
+        </div>
+        <input type="submit" value="Szukaj" />
+      </form>
+    </div>
+  </div>
+  
+</body>
+</html>
