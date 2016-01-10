@@ -31,13 +31,13 @@ public class UserEntity implements IdAware<BigDecimal> {
 	@SequenceGenerator(name = sequenceName, sequenceName = sequenceName, allocationSize = 1, initialValue = 1)
 	private BigDecimal id;
 
-	@Column(unique = true, nullable = false)
+	@Column(unique = true, nullable = false, length = 40)
 	private String name;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 40)
 	private String password;
 
-	@Column(unique = true, nullable = false)
+	@Column(unique = true, nullable = false, length = 320)
 	private String email;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")

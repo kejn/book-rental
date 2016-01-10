@@ -35,7 +35,7 @@ public class BookEntity implements IdAware<BigDecimal> {
 	@SequenceGenerator(name = sequenceName, sequenceName = sequenceName, allocationSize = 1, initialValue = 1)
 	private BigDecimal id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 200)
 	private String title;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,

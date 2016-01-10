@@ -25,10 +25,10 @@ public class AuthorEntity implements IdAware<BigDecimal> {
 	@SequenceGenerator(name = sequenceName, sequenceName = sequenceName, allocationSize = 1, initialValue = 1)
 	private BigDecimal id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 40)
 	private String firstName;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 40)
 	private String lastName;
 
 	protected AuthorEntity() {

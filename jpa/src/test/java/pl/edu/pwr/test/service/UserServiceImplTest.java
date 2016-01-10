@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import pl.edu.pwr.dao.UserDao;
 import pl.edu.pwr.entity.AuthorEntity;
@@ -194,22 +196,26 @@ public class UserServiceImplTest {
 	@Test
 	public void shouldCreateNewUser() throws UserNameExistsException, UserEmailExistsException {
 		// given
-		final UserEntity userMockAfter = userEntityMock(null, null);
-		UserEntity userMockBefore = userMockAfter;
+		final BigDecimal obtainedId = new BigDecimal("99");
+		UserEntity userMockBefore = userEntityMock(null, null);
 		userMockBefore.setId(null);
-		
 		UserTo userToCreate = userMapper.map2To(userMockBefore);
-
 		// when
-		Mockito.when(userDao.createNewUser(Mockito.any(UserEntity.class))).thenReturn(userMockAfter);
-
+		Mockito.when(userDao.createNewUser(Mockito.any(UserEntity.class))).thenAnswer(new Answer<UserEntity>() {
+			@Override
+			public UserEntity answer(InvocationOnMock invocation) throws Throwable {
+				UserEntity param = invocation.getArgumentAt(0, UserEntity.class);
+				param.setId(obtainedId);
+				return param;
+			}
+		});
 		userToCreate = userService.createNewUser(userToCreate);
-
 		// then
 		ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
 		Mockito.verify(userDao).createNewUser(captor.capture());
-		assertEquals(userMockBefore, captor.getValue());
 		assertNotNull(userToCreate);
+		assertNotNull(captor.getValue().getId());
+		assertEquals(obtainedId, captor.getValue().getId());
 	}
 
 }
