@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -27,6 +26,9 @@ import pl.edu.pwr.entity.UserBookLibraryEntity;
 import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.exception.BookAlreadyRentException;
 import pl.edu.pwr.exception.BookNotAvailableException;
+import pl.edu.pwr.exception.BookNotRentException;
+import pl.edu.pwr.exception.UserEmailExistsException;
+import pl.edu.pwr.exception.UserNameExistsException;
 import pl.edu.pwr.mapper.impl.AuthorMapper;
 import pl.edu.pwr.mapper.impl.BookLibraryMapper;
 import pl.edu.pwr.mapper.impl.BookMapper;
@@ -88,7 +90,7 @@ public class UserServiceImplTest {
 		if (book != null && library != null) {
 			books.add(new UserBookLibraryEntity(userEntityMock(null, null), book, library));
 		}
-		return new UserEntity(BigDecimal.ONE, "user", "password", books);
+		return new UserEntity(BigDecimal.ONE, "user", "password", "email@domain.com", books);
 	}
 
 	@Test
@@ -109,7 +111,7 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	public void userShouldRentABook() {
+	public void userShouldRentABook() throws BookAlreadyRentException, BookNotAvailableException {
 		// given
 		final LibraryEntity libraryMock = libraryEntityMock();
 		final BookEntity bookMock = bookEntityMock(libraryMock);
@@ -120,34 +122,94 @@ public class UserServiceImplTest {
 		final BookTo bookArg = bookMapper.map2To(bookMock);
 		UserTo user = userMapper.map2To(userMockBefore);
 
-		try {
-			// when
-			Mockito.when(userDao.rentUserABook(Mockito.any(UserEntity.class), Mockito.any(BookEntity.class),
-			    Mockito.any(LibraryEntity.class))).thenReturn(userMockAfter);
+		// when
+		Mockito.when(userDao.rentUserABook(Mockito.any(UserEntity.class), Mockito.any(BookEntity.class),
+		    Mockito.any(LibraryEntity.class))).thenReturn(userMockAfter);
 
-			final int userBooksSizeBefore = user.getBooks().size();
-			user = userService.rentUserABook(user, bookArg, libraryArg);
-			final int userBooksSizeAfter = user.getBooks().size();
+		final int userBooksSizeBefore = user.getBooks().size();
+		user = userService.rentUserABook(user, bookArg, libraryArg);
 
-			// then
-			ArgumentCaptor<UserEntity> captorUser = ArgumentCaptor.forClass(UserEntity.class);
-			ArgumentCaptor<BookEntity> captorBook = ArgumentCaptor.forClass(BookEntity.class);
-			ArgumentCaptor<LibraryEntity> captorLibrary = ArgumentCaptor.forClass(LibraryEntity.class);
+		// then
+		ArgumentCaptor<UserEntity> captorUser = ArgumentCaptor.forClass(UserEntity.class);
+		ArgumentCaptor<BookEntity> captorBook = ArgumentCaptor.forClass(BookEntity.class);
+		ArgumentCaptor<LibraryEntity> captorLibrary = ArgumentCaptor.forClass(LibraryEntity.class);
 
-			Mockito.verify(userDao).rentUserABook(captorUser.capture(), captorBook.capture(), captorLibrary.capture());
-			assertEquals(userMockBefore, captorUser.getValue());
-			assertEquals(bookMock, captorBook.getValue());
-			assertEquals(libraryMock, captorLibrary.getValue());
+		Mockito.verify(userDao).rentUserABook(captorUser.capture(), captorBook.capture(), captorLibrary.capture());
+		assertEquals(userMockBefore, captorUser.getValue());
+		assertEquals(bookMock, captorBook.getValue());
+		assertEquals(libraryMock, captorLibrary.getValue());
 
-			assertNotNull(user);
-			assertFalse(user.getBooks().isEmpty());
-			assertEquals(1, user.getBooks().size());
-			assertTrue(userBooksSizeBefore >= 0);
-			assertTrue(userBooksSizeAfter >= 0);
-			assertEquals(userBooksSizeBefore, userBooksSizeAfter - 1);
-		} catch (BookAlreadyRentException | BookNotAvailableException e) {
-			fail(e.getMessage());
-		}
+		assertNotNull(user);
+		assertFalse(user.getBooks().isEmpty());
+		assertEquals(1, user.getBooks().size());
+
+		final int userBooksSizeAfter = user.getBooks().size();
+		assertTrue(userBooksSizeBefore >= 0);
+		assertTrue(userBooksSizeAfter >= 0);
+		assertEquals(userBooksSizeBefore, userBooksSizeAfter - 1);
+	}
+
+	@Test
+	public void userShouldReturnABookToLibrary() throws BookNotRentException {
+		// given
+		final LibraryEntity libraryMock = libraryEntityMock();
+		final BookEntity bookMock = bookEntityMock(libraryMock);
+		final UserEntity userMockAfter = userEntityMock(null, null);
+		final UserEntity userMockBefore = userEntityMock(bookMock, libraryMock);
+
+		final LibraryTo libraryArg = libraryMapper.map2To(libraryMock);
+		final BookTo bookArg = bookMapper.map2To(bookMock);
+		UserTo user = userMapper.map2To(userMockBefore);
+
+		// when
+		Mockito.when(userDao.returnABookToLibrary(Mockito.any(UserEntity.class), Mockito.any(BookEntity.class),
+		    Mockito.any(LibraryEntity.class))).thenReturn(userMockAfter);
+
+		final int userBooksSizeBefore = user.getBooks().size();
+		user = userService.returnABookToLibrary(user, bookArg, libraryArg);
+
+		// then
+		ArgumentCaptor<UserEntity> captorUser = ArgumentCaptor.forClass(UserEntity.class);
+		ArgumentCaptor<BookEntity> captorBook = ArgumentCaptor.forClass(BookEntity.class);
+		ArgumentCaptor<LibraryEntity> captorLibrary = ArgumentCaptor.forClass(LibraryEntity.class);
+
+		Mockito.verify(userDao).returnABookToLibrary(captorUser.capture(), captorBook.capture(), captorLibrary.capture());
+		assertEquals(userMockBefore, captorUser.getValue());
+		assertEquals(bookMock, captorBook.getValue());
+		assertEquals(libraryMock, captorLibrary.getValue());
+
+		assertNotNull(user);
+		assertTrue(user.getBooks().isEmpty());
+		assertEquals(0, user.getBooks().size());
+
+		final int userBooksSizeAfter = user.getBooks().size();
+		assertTrue(userBooksSizeBefore >= 0);
+		assertTrue(userBooksSizeAfter >= 0);
+		assertEquals(userBooksSizeBefore, userBooksSizeAfter + 1);
+	}
+
+	/**
+	 * userMockBefore.id is not set to null to verify method call (method 'equals' compares arguments so )
+	 */
+	@Test
+	public void shouldCreateNewUser() throws UserNameExistsException, UserEmailExistsException {
+		// given
+		final UserEntity userMockAfter = userEntityMock(null, null);
+		UserEntity userMockBefore = userMockAfter;
+		userMockBefore.setId(null);
+		
+		UserTo userToCreate = userMapper.map2To(userMockBefore);
+
+		// when
+		Mockito.when(userDao.createNewUser(Mockito.any(UserEntity.class))).thenReturn(userMockAfter);
+
+		userToCreate = userService.createNewUser(userToCreate);
+
+		// then
+		ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+		Mockito.verify(userDao).createNewUser(captor.capture());
+		assertEquals(userMockBefore, captor.getValue());
+		assertNotNull(userToCreate);
 	}
 
 }

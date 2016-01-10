@@ -44,9 +44,10 @@ public class UserBookLibraryEntity implements IdAware<UserBookLibraryEntityId> {
 
 	@Override
 	public String toString() {
-		return "user: " + user.getId() + ", book: " + book.getId() + ", library: " + library.getId();
+		return "@UserBookLibraryEntity(user [" + user.getId() + "], book [" + book.getId() + "], library ["
+		    + library.getId() + "])";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return getId().hashCode();

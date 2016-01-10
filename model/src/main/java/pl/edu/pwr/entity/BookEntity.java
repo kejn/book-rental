@@ -27,7 +27,6 @@ public class BookEntity implements IdAware<BigDecimal> {
 
 	public static final String referenceBookIdColumnName = "BOOK_ID";
 	public static final String referenceBookAuthorTableName = "BOOK_AUTHOR";
-	// public static final String referenceBookLibraryTableName = "BOOK_LIBRARY";
 	protected static final String tableName = "BOOKS";
 	private static final String sequenceName = "BOOKS_SEQ";
 
@@ -126,8 +125,7 @@ public class BookEntity implements IdAware<BigDecimal> {
 	public boolean equals(Object obj) {
 		if (obj instanceof BookEntity) {
 			BookEntity book = (BookEntity) obj;
-			return book.getId().equals(id) && book.getTitle().equals(title) && book.getAuthors().containsAll(authors)
-			    && book.getAuthors().size() == authors.size();
+			return book.toString().equals(toString());
 		}
 		return false;
 	}

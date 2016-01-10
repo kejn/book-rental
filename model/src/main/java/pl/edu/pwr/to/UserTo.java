@@ -12,13 +12,16 @@ public class UserTo implements IdAware<BigDecimal> {
 	private String name;
 
 	private String password;
+	
+	private String email;
 
 	private Set<UserBookLibraryTo> books;
 
-	public UserTo(BigDecimal id, String name, String password, Set<UserBookLibraryTo> books) {
+	public UserTo(BigDecimal id, String name, String password, String email, Set<UserBookLibraryTo> books) {
 		this.id = id;
 		this.name = name;
 		this.password = password;
+		this.email = email;
 		this.books = books;
 	}
 
@@ -47,6 +50,14 @@ public class UserTo implements IdAware<BigDecimal> {
 		this.password = password;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+ 	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 	public Set<UserBookLibraryTo> getBooks() {
 		return books;
 	}

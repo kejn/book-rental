@@ -6,6 +6,7 @@ create or replace TRIGGER USERS_TRG before insert on USERS for each row begin if
 insert into BOOKS (id, title) values (null, 'Pierwsza książka');
 insert into BOOKS (id, title) values (null, 'Książka do usunięcia #1');
 insert into BOOKS (id, title) values (null, 'Książka do usunięcia #2');
+insert into BOOKS (id, title) values (null, 'Niedostępna książka');
 
 insert into AUTHORS (id, first_name, last_name) values (null, 'Jan', 'Kowalski');
 insert into AUTHORS (id, first_name, last_name) values (null, 'Jan', 'Brzechwa');
@@ -16,6 +17,7 @@ insert into BOOK_AUTHOR (book_id, author_id) values (1, 1);
 insert into BOOK_AUTHOR (book_id, author_id) values (1, 2);
 insert into BOOK_AUTHOR (book_id, author_id) values (2, 3);
 insert into BOOK_AUTHOR (book_id, author_id) values (3, 4);
+insert into BOOK_AUTHOR (book_id, author_id) values (4, 4);
 
 insert into LIBRARIES (id, name) values (null, 'Biblioteka we Wrocławiu');
 insert into LIBRARIES (id, name) values (null, 'Biblioteka w Poznaniu');
@@ -29,8 +31,8 @@ insert into BOOK_LIBRARY (book_id, library_id, quantity) values (1, 4, 1);
 insert into BOOK_LIBRARY (book_id, library_id, quantity) values (2, 2, 1);
 insert into BOOK_LIBRARY (book_id, library_id, quantity) values (3, 3, 1);
 
-insert into USERS (id, name, password) values (null, 'user', 'sup3R$ecre7P4$$word');
-insert into USERS (id, name, password) values (null, 'userUpdateCheck', '12345678');
+insert into USERS (id, name, password, email) values (null, 'user', 'sup3R$ecre7P4$$word', 'test1@book-rental.com');
+insert into USERS (id, name, password, email) values (null, 'userUpdateCheck', '12345678', 'test2@book-rental.com');
 
 insert into USER_BOOK_LIBRARY (user_id, book_id, library_id) values(2, 1, 2);
 insert into USER_BOOK_LIBRARY (user_id, book_id, library_id) values(2, 1, 3);

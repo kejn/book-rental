@@ -64,6 +64,11 @@ public class LibraryEntity implements IdAware<BigDecimal> {
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString() {
+		return "@LibraryEntity(id [" + id + "], name [" + name + "])";
+	}
 
 	@Override
 	public BigDecimal getId() {

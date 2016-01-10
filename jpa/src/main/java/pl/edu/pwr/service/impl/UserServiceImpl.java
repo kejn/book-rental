@@ -9,6 +9,9 @@ import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.exception.BookAlreadyRentException;
 import pl.edu.pwr.exception.BookNotAvailableException;
+import pl.edu.pwr.exception.BookNotRentException;
+import pl.edu.pwr.exception.UserEmailExistsException;
+import pl.edu.pwr.exception.UserNameExistsException;
 import pl.edu.pwr.mapper.impl.BookMapper;
 import pl.edu.pwr.mapper.impl.LibraryMapper;
 import pl.edu.pwr.mapper.impl.UserMapper;
@@ -47,9 +50,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserTo returnABookToLibrary(UserTo user, BookTo book, LibraryTo library) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserTo returnABookToLibrary(UserTo user, BookTo book, LibraryTo library) throws BookNotRentException {
+		UserEntity userEntity = userMapper.map2Entity(user);
+		BookEntity bookEntity = bookMapper.map2Entity(book);
+		LibraryEntity libraryEntity = libraryMapper.map2Entity(library);
+		return userMapper.map2To(userDao.returnABookToLibrary(userEntity, bookEntity, libraryEntity));
+	}
+
+	public UserTo createNewUser(UserTo userToCreate) throws UserNameExistsException, UserEmailExistsException {
+		return userMapper.map2To(userDao.createNewUser(userMapper.map2Entity(userToCreate)));
 	}
 
 }

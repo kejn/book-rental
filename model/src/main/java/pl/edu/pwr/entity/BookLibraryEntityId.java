@@ -37,7 +37,7 @@ public class BookLibraryEntityId implements Serializable {
 		}
 		return false;
 	}
-
+	
 	public BookEntity getBook() {
 		return book;
 	}

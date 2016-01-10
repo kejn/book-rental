@@ -47,14 +47,14 @@ public class AuthorEntity implements IdAware<BigDecimal> {
 	
 	@Override
 	public int hashCode() {
-		return id == null ? 0 : id.intValue();
+		return id == null ? 0 : id.hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof AuthorEntity) {
 			AuthorEntity author = (AuthorEntity) obj;
-			return author.stringValue().equals(stringValue());
+			return author.toString().equals(toString());
 		}
 		return false;
 	}

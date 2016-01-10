@@ -8,6 +8,8 @@ import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.exception.BookAlreadyRentException;
 import pl.edu.pwr.exception.BookNotAvailableException;
 import pl.edu.pwr.exception.BookNotRentException;
+import pl.edu.pwr.exception.UserEmailExistsException;
+import pl.edu.pwr.exception.UserNameExistsException;
 
 public interface UserDao extends Dao<UserEntity, BigDecimal> {
 
@@ -58,5 +60,19 @@ public interface UserDao extends Dao<UserEntity, BigDecimal> {
 	 */
 	public UserEntity returnABookToLibrary(UserEntity user, BookEntity book, LibraryEntity library)
 	    throws BookNotRentException;
+
+	/**
+	 * Let create a new user.
+	 * 
+	 * @param user
+	 *          user to be created
+	 * @return given user with assigned <b>id</b> member field
+	 * 
+	 * @throws UserNameExistsException
+	 *           if <b>user.name</b> already exists in database
+	 * @throws UserEmailExistsException
+	 *           if <b>user.email</b> already exists in database
+	 */
+	public UserEntity createNewUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException;
 
 }

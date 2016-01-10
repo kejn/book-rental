@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNotNull;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,8 @@ import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.exception.BookAlreadyRentException;
 import pl.edu.pwr.exception.BookNotAvailableException;
 import pl.edu.pwr.exception.BookNotRentException;
+import pl.edu.pwr.exception.UserEmailExistsException;
+import pl.edu.pwr.exception.UserNameExistsException;
 import pl.edu.pwr.test.config.DataAccessTestConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -113,6 +116,63 @@ public class UserDaoImplTest {
 		assertTrue(quantityAfter >= 0);
 		assertEquals(quantityBefore, quantityAfter + 1);
 	}
+
+	/**
+	 * !!! depends on {@link #shouldFindUserById()},
+	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()},
+	 * {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById()} and
+	 * {@link pl.edu.pwr.test.dao.BookLibraryDaoImplTest#shouldFindBookLibraryByBookLibraryEntityId()}
+	 */
+	@Test(expected = BookAlreadyRentException.class)
+	public void userCantRentAlreadyRentBook() throws BookAlreadyRentException {
+		// given
+		final BigDecimal bookId = BigDecimal.ONE;
+		final BigDecimal libraryId = BigDecimal.ONE;
+		final BigDecimal userId = BigDecimal.ONE;
+		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(bookId, libraryId);
+		
+		final BookEntity book = bookDao.findOne(bookId);
+		final LibraryEntity library = libraryDao.findOne(libraryId);
+		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		UserEntity user = userDao.findOne(userId);
+		assumeNotNull(book,library,bookLibraryEntity,user);
+		
+		// when
+		try {
+			user = userDao.rentUserABook(user, book, library);
+			user = userDao.rentUserABook(user, book, library);
+		} catch (BookNotAvailableException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * !!! depends on {@link #shouldFindUserById()},
+	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()},
+	 * {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById()} and
+	 * {@link pl.edu.pwr.test.dao.BookLibraryDaoImplTest#shouldFindBookLibraryByBookLibraryEntityId()}
+	 */
+	@Test(expected = BookNotAvailableException.class)
+	public void userCantRentANotAvailableBook() throws BookNotAvailableException {
+		// given
+		final BigDecimal bookId = new BigDecimal("4");
+		final BigDecimal libraryId = BigDecimal.ONE;
+		final BigDecimal userId = BigDecimal.ONE;
+		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(bookId, libraryId);
+		
+		final BookEntity book = bookDao.findOne(bookId);
+		final LibraryEntity library = libraryDao.findOne(libraryId);
+		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		UserEntity user = userDao.findOne(userId);
+		assumeNotNull(book,library,bookLibraryEntity,user);
+		
+		// when
+		try {
+			user = userDao.rentUserABook(user, book, library);
+		} catch (BookAlreadyRentException e) {
+			fail(e.getMessage());
+		}
+	}
 	
 	/**
 	!!! depends on {@link #shouldFindUserById()},
@@ -155,5 +215,86 @@ public class UserDaoImplTest {
 		assertTrue(quantityBefore >= 0);
 		assertTrue(quantityAfter >= 0);
 		assertEquals(quantityBefore, quantityAfter - 1);
+	}
+
+	/**
+	!!! depends on {@link #shouldFindUserById()},
+	 * {@link pl.edu.pwr.test.dao.BookDaoImplTest#shouldFindBookById()},
+	 * {@link pl.edu.pwr.test.dao.LibraryDaoImplTest#shouldFindLibraryById()} and
+	 * {@link pl.edu.pwr.test.dao.BookLibraryDaoImplTest#shouldFindBookLibraryByBookLibraryEntityId()}
+	 */
+	@Test(expected = BookNotRentException.class)
+	public void userCantReturnNotRentBookToLibrary() throws BookNotRentException {
+		// given
+		final BigDecimal bookId = new BigDecimal("2");
+		final BigDecimal libraryId = new BigDecimal("3");
+		final BigDecimal userId = new BigDecimal("2");
+		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(bookId, libraryId);
+		
+		final BookEntity book = bookDao.findOne(bookId);
+		final LibraryEntity library = libraryDao.findOne(libraryId);
+		UserEntity user = userDao.findOne(userId);
+		BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(bookLibraryId);
+		assumeNotNull(book,bookLibraryEntity, library,user);
+		
+		// when
+		user = userDao.returnABookToLibrary(user, book, library);
+	}
+	
+	@Test
+	public void shouldCreateNewUser() {
+		// given
+		final String userName = "new User";
+		final String password = "simplePassword";
+		final String email = "newuser@book-rental.com";
+		UserEntity userToCreate = new UserEntity(null, userName, password, email, new HashSet<>());
+		
+		// when
+		try {
+			userToCreate = userDao.createNewUser(userToCreate);
+		} catch (UserNameExistsException | UserEmailExistsException e) {
+			fail(e.getMessage());
+		}
+		
+		// then
+		assertNotNull(userToCreate);
+		assertNotNull(userToCreate.getId());
+		assertEquals(userName, userToCreate.getName());
+		assertEquals(password, userToCreate.getPassword());
+		assertEquals(email, userToCreate.getEmail());
+		assertTrue(userToCreate.getBooks().isEmpty());
+	}
+
+	@Test(expected = UserNameExistsException.class)
+	public void shouldThrowUserNameExistsExceptionWhenCreateNewUser() throws UserNameExistsException {
+		// given
+		final String userName = "user";
+		final String password = "simplePassword";
+		final String email = "newuser2@book-rental.com";
+		UserEntity userToCreate = new UserEntity(null, userName, password, email, new HashSet<>());
+		
+		// when
+		try {
+			userToCreate = userDao.createNewUser(userToCreate);
+		} catch (UserEmailExistsException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	@Test(expected = UserEmailExistsException.class)
+	public void shouldThrowUserWithGivenEmailExistsExceptionWhenCreateNewUser() throws UserEmailExistsException {
+		// given
+		final String userName = "new User2";
+		final String password = "simplePassword";
+		final String email = "newuser@book-rental.com";
+		UserEntity userToCreate = new UserEntity(null, userName, password, email, new HashSet<>());
+		
+		// when
+		try {
+			userToCreate = userDao.createNewUser(userToCreate);
+		} catch (UserNameExistsException e) {
+			fail(e.getMessage());
+		}
+
 	}
 }

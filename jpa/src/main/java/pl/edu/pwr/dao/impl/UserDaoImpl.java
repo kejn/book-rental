@@ -1,6 +1,7 @@
 package pl.edu.pwr.dao.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,8 @@ import pl.edu.pwr.entity.UserEntity;
 import pl.edu.pwr.exception.BookAlreadyRentException;
 import pl.edu.pwr.exception.BookNotAvailableException;
 import pl.edu.pwr.exception.BookNotRentException;
+import pl.edu.pwr.exception.UserEmailExistsException;
+import pl.edu.pwr.exception.UserNameExistsException;
 
 @Component
 public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal> implements UserDao {
@@ -110,6 +113,29 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		}
 		user = update(user);
 		return user;
+	}
+
+	@Override
+	public UserEntity createNewUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
+		checkIfArgumentIsNull(user, "user");
+		prepareQueryVariables();
+
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.or(qEntity.name.eq(user.getName()));
+		builder.or(qEntity.email.eq(user.getEmail()));
+		
+		List<UserEntity> userCheck = query.from(qEntity).where(builder).list(qEntity); 
+
+		for(UserEntity userFound : userCheck) {
+			if(userFound.getName().equals(user.getName())) {
+				throw new UserNameExistsException("Username (" + user.getName() + ") is already taken");
+			}
+			if(userFound.getEmail().equals(user.getEmail())) {
+				throw new UserEmailExistsException("Username with this email (" + user.getEmail() + ") already exists");
+			}
+		}
+
+		return save(user);
 	}
 
 }

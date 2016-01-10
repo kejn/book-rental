@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,23 +37,21 @@ public class UserEntity implements IdAware<BigDecimal> {
 	@Column(nullable = false)
 	private String password;
 
+	@Column(unique = true, nullable = false)
+	private String email;
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private Set<UserBookLibraryEntity> books = new HashSet<>();
 
 	protected UserEntity() {
 	}
 
-	public UserEntity(BigDecimal id, String name, String password, Set<UserBookLibraryEntity> books) {
+	public UserEntity(BigDecimal id, String name, String password, String email, Set<UserBookLibraryEntity> books) {
 		this.id = id;
 		this.name = name;
 		this.password = password;
+		this.email = email;
 		this.books = books;
-	}
-
-	public UserEntity(BigDecimal id, String name, String password) {
-		this.id = id;
-		this.name = name;
-		this.password = password;
 	}
 
 	/**
@@ -90,17 +89,22 @@ public class UserEntity implements IdAware<BigDecimal> {
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return id == null ? 0 : id.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof UserEntity) {
 			UserEntity user = (UserEntity) obj;
-			return user.getId().equals(id) && user.getName().equals(name) && user.getPassword().equals(password)
-			    && user.getBooks().containsAll(books);
+			return user.toString().equals(toString());
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return "@UserEntity(id [" + id + "], name [" + name + "], password [" + password + "], email [" + email + "], books ["
+		    + books.stream().map(b -> b.toString()).collect(Collectors.joining(", ")) + "])";
 	}
 
 	@Override
@@ -126,6 +130,14 @@ public class UserEntity implements IdAware<BigDecimal> {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Set<UserBookLibraryEntity> getBooks() {

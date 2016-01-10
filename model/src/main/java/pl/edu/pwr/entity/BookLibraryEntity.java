@@ -45,7 +45,7 @@ public class BookLibraryEntity implements IdAware<BookLibraryEntityId> {
 	public boolean isBookAvailable() {
 		return quantity > 0;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return getId().hashCode();
@@ -53,11 +53,17 @@ public class BookLibraryEntity implements IdAware<BookLibraryEntityId> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof BookLibraryEntity) {
+		if (obj instanceof BookLibraryEntity) {
 			BookLibraryEntity bookLibrary = (BookLibraryEntity) obj;
 			return bookLibrary.getId().equals(getId()) && bookLibrary.getQuantity() == getQuantity();
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "@BookLibraryEntity(bookId [" + book.getId() + "], library [" + library.getId() + "], quantity [" + quantity
+		    + "])";
 	}
 
 	@Override
