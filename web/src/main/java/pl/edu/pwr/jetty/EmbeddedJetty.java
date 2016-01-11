@@ -3,6 +3,8 @@ package pl.edu.pwr.jetty;
 import java.io.IOException;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -49,6 +51,7 @@ public class EmbeddedJetty {
 		contextHandler.addServlet(new ServletHolder(new DispatcherServlet(context)), mappingUrl);
 		contextHandler.addEventListener(new ContextLoaderListener(context));
 		contextHandler.setResourceBase(new ClassPathResource(webAppDirectory).getURI().toString());
+		contextHandler.setSessionHandler(new SessionHandler(new HashSessionManager()));
 		return contextHandler;
 	}
 

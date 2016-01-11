@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head lang="en">
+  <title>Book Details</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" th:href="@{/css/application.css}" href="/css/application.css" />
+  <!-- bootstrap -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <!-- bootstrap end -->
+  <script>
+  $(document).ready(function() {
+    $("#signInHyperlink").addClass("active");
+  });
+  </script>
+</head>
+<body>
+  <div th:include="fragments :: nav"></div>
+  <div class="container">
+    <div id="signInDiv" class="row panel panel-default">
+      <div class="col-sm-8">
+        <h2>Logowanie</h2>
+        <form name="loginForm" th:action="@{/signIn}" method="post" th:object="${user}" role="form" class="form-horizontal">
+          
+          <div class="form-group form-group-sm">
+            <label for="name" class="control-label col-sm-3">Nazwa użytkownika: </label>
+            <div class="col-sm-5">
+              <input id="name" type="text" th:field="*{name}" required="required" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group form-group-sm">
+            <label for="name" class="control-label col-sm-3">Hasło: </label>
+            <div class="col-sm-5">
+              <input id="password" type="password" th:field="*{password}" required="required" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group"> 
+            <div class="col-sm-offset-3 col-sm-5">
+              <input width="100%" type="submit" class="btn btn-success" value="Zaloguj się" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

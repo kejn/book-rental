@@ -1,5 +1,6 @@
 package pl.edu.pwr.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<BookTo> findAll() {
 		return bookMapper.map2To(bookDao.findAll());
+	}
+	
+	@Override
+	public BookTo findBookById(BigDecimal id) {
+		return bookMapper.map2To(bookDao.findOne(id));
 	}
 
 	@Override

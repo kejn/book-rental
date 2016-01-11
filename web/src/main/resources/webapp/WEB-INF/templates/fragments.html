@@ -25,6 +25,10 @@
               <span class="glyphicon glyphicon-th-list"></span> Lista książek</a>
             </li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li id="registerHyperlink"><a href="#"><span class="glyphicon glyphicon-user"></span> Rejestracja</a></li>
+            <li id="signInHyperlink"><a th:href="@{/signIn}"><span class="glyphicon glyphicon-log-in"></span> Logowanie</a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -32,26 +36,30 @@
 
   <div th:fragment="navdetails">
     <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
+      <div class="container-fluid container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>                        
           </button>   
-          <a class="navbar-brand" th:href="@{/home}">car-rental</a>
+          <a class="navbar-brand" th:href="@{/home}">book-rental</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
             <li id="homeHyperlink"><a th:href="@{/home}">
               <span class="glyphicon glyphicon-home"></span> Strona główna</a>
             </li>
-            <li id="carsHyperlink"><a th:href="@{/cars}">
-              <span class="glyphicon glyphicon-th-list"></span> Lista samochodów</a>
+            <li id="booksHyperlink"><a th:href="@{/books}">
+              <span class="glyphicon glyphicon-th-list"></span> Lista książek</a>
             </li>
             <li class="active"><a href="#">
               <span class="glyphicon glyphicon-list-alt"></span> Szczegóły</a>
             </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Rejestracja</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logowanie</a></li>
           </ul>
         </div>
       </div>
@@ -78,26 +86,28 @@
     });
     </script>
     <div class="container" style="margin-bottom: 20px;">
-      <form class="form-inline" th:with="libX = ${bookLibrary} == null or ${bookLibrary} == ''">
-        <div class="form-group form-group-sm">
+      <form class="form-inline">
+        <div class="form-group form-group-sm" th:with="titleX = ${bookTitle} == null or ${bookTitle} == ''">
           <label for="bookTitle">Tytuł książki:</label>
-          <input id="bookTitle" type="text" name="bookTitle" th:value="${bookTitle}" class="form-control" />
-          <span th:unless="${bookTitle} == null or ${bookTitle} == ''">
+          <input id="bookTitle" type="text" name="bookTitle" th:value="${bookTitle}" th:if="${titleX}" class="form-control" />
+          <span th:unless="${titleX}">
             <button id="clearTitle" class="btn btn-xs btn-danger">
+              <span th:text="${bookTitle}"></span>
               <span class="glyphicon glyphicon-remove"></span>
             </button>
           </span> 
         </div>
-        <div class="form-group  form-group-sm">
+        <div class="form-group  form-group-sm" th:with="authX = ${bookAuthor} == null or ${bookAuthor} == ''">
           <label for="bookAuthor">Autor:</label>
-          <input id="bookAuthor" type="text" name="bookAuthor" th:value="${bookAuthor}" class="form-control" />
-          <span th:unless="${bookAuthor} == null or ${bookAuthor} == ''">
+          <input id="bookAuthor" type="text" name="bookAuthor" th:value="${bookAuthor}" th:if="${authX}" class="form-control" />
+          <span th:unless="${authX}">
             <button id="clearAuthor" class="btn btn-xs btn-danger">
+              <span th:text="${bookAuthor}"></span>
               <span class="glyphicon glyphicon-remove"></span>
             </button>
           </span>
         </div>
-        <div class="form-group form-group-sm">
+        <div class="form-group form-group-sm" th:with="libX = ${bookLibrary} == null or ${bookLibrary} == ''">
           <label for="bookLibrary">Biblioteka:</label>
           <select id="bookLibrary" name="bookLibrary" onchange="this.form.submit()" class="form-control">
             <option label="* (Wszystkie biblioteki)" value="" th:selected="${libX}">* (Wszystkie biblioteki)</option>

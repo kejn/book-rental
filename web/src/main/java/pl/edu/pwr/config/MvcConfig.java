@@ -22,8 +22,7 @@ public class MvcConfig extends WebMvcConfigurationSupport {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
-		// uncomment if you want to use some of your JavaScript/jQuery scripts
-		// registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
+		registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
 	}
 
 	@Override

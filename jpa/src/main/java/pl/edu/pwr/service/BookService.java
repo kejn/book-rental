@@ -1,5 +1,6 @@
 package pl.edu.pwr.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import pl.edu.pwr.to.BookTo;
@@ -13,6 +14,8 @@ import pl.edu.pwr.to.BookTo;
 public interface BookService {
 
 	public List<BookTo> findAll();
+	
+	public BookTo findBookById(BigDecimal id);
 
 	public List<BookTo> findBooksByTitle(String bookTitle);
 

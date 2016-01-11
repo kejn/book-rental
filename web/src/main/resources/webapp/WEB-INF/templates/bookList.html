@@ -13,7 +13,14 @@
   <script>
   $(document).ready(function() {
     $("#booksHyperlink").addClass("active");
+    $(".dropdown-menu li a").click(function() {
+    	var libraryId = $(this).parent().find("span").text();
+    	$(this).parents("form").find("input").val(libraryId);
+    	$(this).parents("form").find("input").text(libraryId);
+    	$(this).parents("form").submit();
+    });
   });
+  
   </script>
 </head>
 <body>
@@ -43,15 +50,27 @@
           </td>
           <td>
             <span th:each="library : ${book.libraries}">
-	            [<span th:text="${library.quantity}">quantity</span> szt.]
+	            <span class="badge"><span th:text="${library.quantity}">quantity</span> szt.</span>
 	            <span th:text="${library.library.name}">libraryName</span>
 	            <br />
             </span>
           </td>
           <td>
-            <form th:action="@{/books/rent}" role="form">
-              <input name="id" type="text" th:value="${book.id}" hidden="true" />
-              <input type="submit" value="Wypożycz >" class="btn btn-xs btn-primary"/>
+            <button th:if="${book.libraries.isEmpty()}" class="btn btn-xs btn-danger" disabled="disabled">Książka niedostępna</button>
+            <form th:unless="${book.libraries.isEmpty()}" th:action="@{/books/rent/} + ${book.id}" role="form">
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                  Wypożycz <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li class="dropdown-header">Wybierz bibliotekę</li>
+                  <li th:each="library : ${book.libraries}">
+                    <a href="#" th:text="${library.library.name}"></a>
+                    <span th:text="${library.library.id}" hidden="true"></span>
+                  </li>
+                </ul>
+              </div>
+              <input name="libraryId" type="text" hidden="true"></input>
             </form>
           </td>
         </tr>

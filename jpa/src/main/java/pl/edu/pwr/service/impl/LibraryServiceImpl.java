@@ -1,5 +1,6 @@
 package pl.edu.pwr.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +34,11 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public List<LibraryTo> findLibrariesByName(String libraryName) {
 		return set2List(libraryMapper.map2To(libraryDao.findLibrariesByName(libraryName)));
+	}
+
+	@Override
+	public LibraryTo findLibraryById(BigDecimal libraryId) {
+		return libraryMapper.map2To(libraryDao.findOne(libraryId));
 	}
 
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head lang="en">
+  <title>Book Details</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" th:href="@{/css/application.css}" href="/css/application.css" />
+  <!-- bootstrap -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <!-- bootstrap end -->
+</head>
+<body>
+  <div th:include="fragments :: navdetails"></div>
+  <div class="container">
+    <div id="detailDiv" class="row panel panel-default">
+      <div class="col-sm-4">
+        <h2>Szczegóły</h2>
+        <table id="details" class="table">
+          <tr>
+            <th>ID</th>
+            <td th:text="${book.id}">id</td>
+          </tr>
+          <tr>
+            <th>Tytuł</th>
+            <td th:text="${book.title}">location</td>
+          </tr>
+          <tr>
+            <th>Autorzy</th>
+            <td>
+	            <span th:each="author : ${book.authors}">
+	              <span th:text="${author.firstName}">firstName</span>
+	              <span th:text="${author.lastName}">lastName</span>
+	              <br />
+	            </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-sm-8">
+        <h2>Formularz rezerwacji</h2>
+        <form id="renter" name="rentForm" th:action="@{/confirmEmail}" method="post" th:object="${order}" role="form" class="form-horizontal">
+
+          <div class="form-group form-group-sm">
+            <label for="name" class="control-label col-sm-2">Imię: </label>
+            <div class="col-sm-10">
+              <input id="name" type="text" th:field="*{user.name}" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group form-group-sm">
+            <label for="email" class="control-label col-sm-2">Email: </label>
+            <div class="col-sm-10">
+              <input id="email" type="email" th:field="*{user.email}" required="required" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group form-group-sm">
+            <label for="libraryName" class="control-label col-sm-2">Biblioteka: </label>
+            <div class="col-sm-10">
+              <input id="libraryName" type="text" th:field="*{library.name}" required="required" disabled="disabled" />
+            </div>
+          </div>
+
+          <input id="bookId" name="bookId" type="text" th:value="${book.id}" hidden="true" />
+          <div class="form-group"> 
+            <div class="col-sm-offset-2 col-sm-10">
+              <input width="100%" type="submit" class="btn btn-info" value="Wypożycz teraz!" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
