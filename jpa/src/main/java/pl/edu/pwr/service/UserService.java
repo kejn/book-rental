@@ -25,5 +25,7 @@ public interface UserService {
 	public UserTo returnABookToLibrary(UserTo user, BookTo book, LibraryTo library) throws BookNotRentException;
 
 	public UserTo createNewUser(UserTo userToCreate) throws UserNameExistsException, UserEmailExistsException;
+	
+	public UserTo createNewUserWithNameLikeId(UserTo userToCreate) throws UserNameExistsException, UserEmailExistsException;
 
 }

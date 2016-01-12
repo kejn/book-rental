@@ -10,6 +10,9 @@ public class LibraryTo implements IdAware<BigDecimal> {
 
 	private String name;
 
+	public LibraryTo() {
+	}
+	
 	public LibraryTo(BigDecimal id, String name) {
 		this.id = id;
 		this.name = name;

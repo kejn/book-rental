@@ -12,7 +12,7 @@
   <!-- bootstrap end -->
 </head>
 <body>
-  <div th:include="fragments :: navdetails"></div>
+  <div th:include="fragments :: nav"></div>
   <div class="container">
     <div id="detailDiv" class="row panel panel-default">
       <div class="col-sm-4">
@@ -20,16 +20,16 @@
         <table id="details" class="table">
           <tr>
             <th>ID</th>
-            <td th:text="${book.id}">id</td>
+            <td th:text="${order.book.id}">id</td>
           </tr>
           <tr>
             <th>Tytuł</th>
-            <td th:text="${book.title}">location</td>
+            <td th:text="${order.book.title}">location</td>
           </tr>
           <tr>
             <th>Autorzy</th>
             <td>
-	            <span th:each="author : ${book.authors}">
+	            <span th:each="author : ${order.book.authors}">
 	              <span th:text="${author.firstName}">firstName</span>
 	              <span th:text="${author.lastName}">lastName</span>
 	              <br />
@@ -40,16 +40,16 @@
       </div>
       <div class="col-sm-8">
         <h2>Formularz rezerwacji</h2>
-        <form id="renter" name="rentForm" th:action="@{/confirmEmail}" method="post" th:object="${order}" role="form" class="form-horizontal">
+        <form id="renter" name="rentForm" th:action="@{/confirmOrder/{bid}/{lid}(bid=${order.book.id},lid=${order.library.id})}" method="POST" th:object="${order}" role="form" class="form-horizontal">
 
-          <div class="form-group form-group-sm">
+          <div class="form-group form-group-sm" th:unless="${session.user}">
             <label for="name" class="control-label col-sm-2">Imię: </label>
             <div class="col-sm-10">
               <input id="name" type="text" th:field="*{user.name}" class="form-control" />
             </div>
           </div>
 
-          <div class="form-group form-group-sm">
+          <div class="form-group form-group-sm" th:unless="${session.user}">
             <label for="email" class="control-label col-sm-2">Email: </label>
             <div class="col-sm-10">
               <input id="email" type="email" th:field="*{user.email}" required="required" class="form-control" />
@@ -59,11 +59,11 @@
           <div class="form-group form-group-sm">
             <label for="libraryName" class="control-label col-sm-2">Biblioteka: </label>
             <div class="col-sm-10">
+              <input id="bookId" type="text" th:field="*{book.id}" required="required" hidden="true" />
+              <input id="libraryId" type="text" th:field="*{library.id}" required="required" hidden="true" />
               <input id="libraryName" type="text" th:field="*{library.name}" required="required" disabled="disabled" />
             </div>
           </div>
-
-          <input id="bookId" name="bookId" type="text" th:value="${book.id}" hidden="true" />
           <div class="form-group"> 
             <div class="col-sm-offset-2 col-sm-10">
               <input width="100%" type="submit" class="btn btn-info" value="Wypożycz teraz!" />

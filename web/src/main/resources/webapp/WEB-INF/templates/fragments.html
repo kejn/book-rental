@@ -24,42 +24,14 @@
             <li id="booksHyperlink"><a th:href="@{/books}">
               <span class="glyphicon glyphicon-th-list"></span> Lista książek</a>
             </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li id="registerHyperlink"><a href="#"><span class="glyphicon glyphicon-user"></span> Rejestracja</a></li>
-            <li id="signInHyperlink"><a th:href="@{/signIn}"><span class="glyphicon glyphicon-log-in"></span> Logowanie</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div th:fragment="navdetails">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>                        
-          </button>   
-          <a class="navbar-brand" th:href="@{/home}">book-rental</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav">
-            <li id="homeHyperlink"><a th:href="@{/home}">
-              <span class="glyphicon glyphicon-home"></span> Strona główna</a>
-            </li>
-            <li id="booksHyperlink"><a th:href="@{/books}">
-              <span class="glyphicon glyphicon-th-list"></span> Lista książek</a>
-            </li>
-            <li class="active"><a href="#">
+            <li class="active" th:if="${detailsTab}"><a href="#">
               <span class="glyphicon glyphicon-list-alt"></span> Szczegóły</a>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#"><span class="glyphicon glyphicon-user"></span> Rejestracja</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logowanie</a></li>
+            <li id="signInHyperlink" th:unless="${session.user}"><a th:href="@{/signIn}"><span class="glyphicon glyphicon-log-in"></span> Logowanie</a></li>
+            <li id="logoutHyperlink" th:if="${session.user}"><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-in"></span> Wyloguj</a></li>
           </ul>
         </div>
       </div>

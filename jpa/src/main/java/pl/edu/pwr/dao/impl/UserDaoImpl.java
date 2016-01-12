@@ -118,14 +118,28 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 	@Override
 	public UserEntity createNewUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
 		checkIfArgumentIsNull(user, "user");
-		prepareQueryVariables();
+		checkUserBeforeSave(user);
+		return save(user);
+	}
 
+	@Override
+	public UserEntity createNewUserWithNameLikeId(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
+		checkIfArgumentIsNull(user, "user");
+		checkUserBeforeSave(user);
+		user = save(user);
+		user.setName(user.getId().toBigInteger().toString());
+		return user;
+	}
+	
+	private void checkUserBeforeSave(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
+		prepareQueryVariables();
+		
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.or(qEntity.name.eq(user.getName()));
 		builder.or(qEntity.email.eq(user.getEmail()));
 		
 		List<UserEntity> userCheck = query.from(qEntity).where(builder).list(qEntity); 
-
+		
 		for(UserEntity userFound : userCheck) {
 			if(userFound.getName().equals(user.getName())) {
 				throw new UserNameExistsException("Username (" + user.getName() + ") is already taken");
@@ -134,8 +148,13 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 				throw new UserEmailExistsException("Username with this email (" + user.getEmail() + ") already exists");
 			}
 		}
-
-		return save(user);
+	}
+	
+	@Override
+	public UserEntity updateUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
+		checkIfArgumentIsNull(user, "user");
+		checkUserBeforeSave(user);
+		return update(user);
 	}
 
 }

@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan(basePackages = { "pl.edu.pwr" })
-@Import({ MvcConfig.class, ThymeleafConfig.class })
+@Import({ MvcConfig.class, ThymeleafConfig.class, MailConfig.class })
 public class WebConfig {
+	
+	
+	
+	
 }

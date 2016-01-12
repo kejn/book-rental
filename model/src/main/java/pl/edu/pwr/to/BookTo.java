@@ -14,6 +14,9 @@ public class BookTo implements IdAware<BigDecimal> {
 	private Set<AuthorTo> authors;
 
 	private Set<BookLibraryTo> libraries;
+	
+	public BookTo() {
+	}
 
 	public BookTo(BigDecimal id, String title, Set<AuthorTo> authors, Set<BookLibraryTo> libraries) {
 		this.id = id;

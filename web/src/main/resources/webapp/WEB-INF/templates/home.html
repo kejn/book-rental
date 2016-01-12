@@ -20,7 +20,7 @@
 <body>
   <div th:include=" fragments :: nav"></div>
   <div class="container">
-    <h1>Witaj<span th:text="' ' + ${session.user}" th:if="${session.user}"></span>!</h1>
+    <h1>Witaj<strong th:text="' ' + ${session.user.name}" th:if="${session.user}"></strong>!</h1>
   </div>
 </body>
 </html>

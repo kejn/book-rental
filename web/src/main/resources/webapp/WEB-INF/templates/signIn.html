@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
 <head lang="en">
-  <title>Book Details</title>
+  <title>Sign in</title>
   <meta charset="UTF-8" />
   <link rel="stylesheet" th:href="@{/css/application.css}" href="/css/application.css" />
   <!-- bootstrap -->
@@ -10,40 +10,55 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <!-- bootstrap end -->
-  <script>
+  <script th:inline="javascript">
   $(document).ready(function() {
     $("#signInHyperlink").addClass("active");
   });
-  </script>
+</script>
 </head>
 <body>
   <div th:include="fragments :: nav"></div>
   <div class="container">
     <div id="signInDiv" class="row panel panel-default">
-      <div class="col-sm-8">
+      <div class="col-sm-12">
         <h2>Logowanie</h2>
-        <form name="loginForm" th:action="@{/signIn}" method="post" th:object="${user}" role="form" class="form-horizontal">
-          
+        <div class="alert alert-danger" th:if="${error}">
+          <p th:text="${error}"></p>
+        </div>
+        <form name="loginForm" th:action="@{/signIn}" th:unless="${session.user}" method="POST" th:object="${user}" role="form" class="form-horizontal">
           <div class="form-group form-group-sm">
-            <label for="name" class="control-label col-sm-3">Nazwa użytkownika: </label>
-            <div class="col-sm-5">
+            <label for="name" class="control-label col-sm-2">Nazwa użytkownika: </label>
+            <div class="col-sm-3">
               <input id="name" type="text" th:field="*{name}" required="required" class="form-control" />
             </div>
           </div>
 
           <div class="form-group form-group-sm">
-            <label for="name" class="control-label col-sm-3">Hasło: </label>
-            <div class="col-sm-5">
+            <label for="name" class="control-label col-sm-2">Hasło: </label>
+            <div class="col-sm-3">
               <input id="password" type="password" th:field="*{password}" required="required" class="form-control" />
             </div>
           </div>
 
           <div class="form-group"> 
-            <div class="col-sm-offset-3 col-sm-5">
+            <div class="col-sm-offset-2 col-sm-3">
               <input width="100%" type="submit" class="btn btn-success" value="Zaloguj się" />
             </div>
           </div>
         </form>
+      </div>
+      <div class="col-sm-12" th:if="${session.user}">
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+	        var url = /*[[@{/home}]]*/"#";
+	        window.setTimeout(function() {
+	          window.location.replace(url);
+	        }, 2000);
+        /*]]>*/
+        </script>
+        <div class=" alert alert-info">
+          <p>Zalogowano jako <strong th:text="${session.user.name}"></strong>. Za chwilę nastąpi przekierowanie</p>
+        </div>
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 package pl.edu.pwr.to;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 import pl.edu.pwr.common.IdAware;
@@ -17,6 +18,14 @@ public class UserTo implements IdAware<BigDecimal> {
 
 	private Set<UserBookLibraryTo> books;
 
+	public UserTo() {
+		this.id = null;
+		this.name = "";
+		this.password = "";
+		this.email = "";
+		this.books = new HashSet<>();
+	}
+	
 	public UserTo(BigDecimal id, String name, String password, String email, Set<UserBookLibraryTo> books) {
 		this.id = id;
 		this.name = name;

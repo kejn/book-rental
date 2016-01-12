@@ -8,6 +8,9 @@ public class OrderForm {
 	
 	private LibraryTo library;
 	
+	public OrderForm() {
+	}
+	
 	public OrderForm(UserTo user, BookTo book, LibraryTo library) {
 		this.user = user;
 		this.book = book;

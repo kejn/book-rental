@@ -37,7 +37,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserTo findUserEqualToNameVerifyPassword(String userName, String password) {
-		return userMapper.map2To(userDao.findUserEqualToNameVerifyPassword(userName, password));
+		UserEntity user = userDao.findUserEqualToNameVerifyPassword(userName, password);
+		return (user == null) ? null : userMapper.map2To(user);
 	}
 
 	@Override
@@ -59,6 +60,11 @@ public class UserServiceImpl implements UserService {
 
 	public UserTo createNewUser(UserTo userToCreate) throws UserNameExistsException, UserEmailExistsException {
 		return userMapper.map2To(userDao.createNewUser(userMapper.map2Entity(userToCreate)));
+	}
+
+	@Override
+	public UserTo createNewUserWithNameLikeId(UserTo userToUpdate) throws UserNameExistsException, UserEmailExistsException {
+		return userMapper.map2To(userDao.update(userMapper.map2Entity(userToUpdate)));
 	}
 
 }

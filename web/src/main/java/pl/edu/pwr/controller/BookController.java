@@ -54,14 +54,14 @@ public class BookController {
 	}
 
 	@RequestMapping(value = "/books/rent/{bookId}", method = RequestMethod.GET)
-	public String carDetails(Map<String, Object> params, @PathVariable("bookId") BigDecimal bookId,
+	public String bookDetails(Map<String, Object> params, @PathVariable("bookId") BigDecimal bookId,
 	    @RequestParam BigDecimal libraryId) {
 		final BookTo book = bookService.findBookById(bookId);
 		final LibraryTo library = libraryService.findLibraryById(libraryId);
 		UserTo user = new UserTo(null, "", "", "", new HashSet<>());
 		OrderForm order = new OrderForm(user, book, library);
-		params.put("book", book);
 		params.put("order", order);
+		params.put("detailsTab", true);
 		return "rent";
 	}
 
