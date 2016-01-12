@@ -63,8 +63,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserTo createNewUserWithNameLikeId(UserTo userToUpdate) throws UserNameExistsException, UserEmailExistsException {
-		return userMapper.map2To(userDao.update(userMapper.map2Entity(userToUpdate)));
+	public UserTo updateUser(UserTo userToUpdate) {
+		return userMapper.map2To(userDao.updateUser(userMapper.map2Entity(userToUpdate)));
+	}
+
+	@Override
+	public UserTo findUserEqualToEmail(String email) {
+		return userMapper.map2To(userDao.findUserEqualToEmail(email));
 	}
 
 }

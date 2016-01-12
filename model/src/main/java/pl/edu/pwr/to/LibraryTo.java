@@ -19,6 +19,25 @@ public class LibraryTo implements IdAware<BigDecimal> {
 	}
 
 	@Override
+	public int hashCode() {
+		return id == null ? 0 : id.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof LibraryTo) {
+			LibraryTo library = (LibraryTo) obj;
+			return library.toString().equals(toString());
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "@LibraryTo(id ["+ id + "], name [" + name +"])";
+	}
+
+	@Override
 	public BigDecimal getId() {
 		return id;
 	}

@@ -14,12 +14,15 @@
 <body>
   <div th:include="fragments :: nav"></div>
   <div class="container">
-	  <div th:unless="${session.user}" class="alert alert-warning">
+    <div th:if="${error}" class="alert alert-danger">
+      <strong>Błąd!</strong><br /><span th:text="${error}"></span>
+    </div>
+	  <div th:unless="${session.user} or ${emailConfirmed} or ${error}" class="alert alert-warning">
       <h1>Etap 1 z 2</h1>
       Na adres email (<strong th:text="${order.user.email}"></strong>) wysłano link weryfikujący wypożeczynie.
 	  </div>
 	  
-	  <div th:if="${session.user}">
+	  <div th:if="${session.user} or ${emailConfirmed}" th:unless="${error}">
 	    <script th:inline="javascript">
 	    /*<![CDATA[*/
 	      var url = /*[[@{/home}]]*/"#";

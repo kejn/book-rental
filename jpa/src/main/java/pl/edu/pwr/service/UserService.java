@@ -26,6 +26,8 @@ public interface UserService {
 
 	public UserTo createNewUser(UserTo userToCreate) throws UserNameExistsException, UserEmailExistsException;
 	
-	public UserTo createNewUserWithNameLikeId(UserTo userToCreate) throws UserNameExistsException, UserEmailExistsException;
+	public UserTo updateUser(UserTo user);
+
+	public UserTo findUserEqualToEmail(String email);
 
 }

@@ -57,6 +57,8 @@ public class UserBookLibraryEntity implements IdAware<UserBookLibraryEntityId> {
 	public boolean equals(Object obj) {
 		if (obj instanceof UserBookLibraryEntity) {
 			UserBookLibraryEntity bookLibrary = (UserBookLibraryEntity) obj;
+			System.out.println(bookLibrary);
+			System.out.println(toString() + "\n");
 			return bookLibrary.toString().equals(toString());
 		}
 		return false;

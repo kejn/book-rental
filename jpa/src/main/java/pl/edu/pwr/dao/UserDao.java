@@ -75,8 +75,10 @@ public interface UserDao extends Dao<UserEntity, BigDecimal> {
 	 */
 	public UserEntity createNewUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException;
 
-	public UserEntity updateUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException;
+	public UserEntity updateUser(UserEntity user);
 
-	UserEntity createNewUserWithNameLikeId(UserEntity user) throws UserNameExistsException, UserEmailExistsException;
+	UserEntity createNewUserWithNameLikeId(UserEntity user);
+
+	public UserEntity findUserEqualToEmail(String email);
 
 }

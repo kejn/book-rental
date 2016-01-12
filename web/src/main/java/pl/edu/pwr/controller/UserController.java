@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import pl.edu.pwr.exception.BookAlreadyRentException;
+import pl.edu.pwr.exception.BookNotAvailableException;
 import pl.edu.pwr.exception.UserEmailExistsException;
 import pl.edu.pwr.exception.UserNameExistsException;
 import pl.edu.pwr.service.BookService;
@@ -56,12 +58,27 @@ public class UserController {
 
 		UserTo user = (UserTo) session.getAttribute("user");
 		if (user != null) {
+			try {
+				user = userService.rentUserABook(user, book, library);
+			} catch (BookAlreadyRentException e) {
+				String error = (String) params.get("error");
+				params.put("error", appendToMsg(error, "Już wypożyczono tą książkę na ten adres email."));
+			} catch (BookNotAvailableException e) {
+				String error = (String) params.get("error");
+				params.put("error", appendToMsg(error, "Książka jest już niedostępna."));
+			}
 			order.setUser(user);
+			
 		} else {
+			user = userService.findUserEqualToEmail(order.getUser().getEmail()); 
+			if(user != null) {
+				params.put("error", "Podany adres email już istnieje w bazie danych.");
+			}
 			try {
 				mailSender.send(createMessage(order.getUser().getEmail(), book, library));
 			} catch(MailException e) {
-				System.out.println(e.getMessage());
+				String error = (String) params.get("error");
+				params.put("error", appendToMsg(error, e.getMessage()));
 			}
 		}
 		params.put("order", order);
@@ -70,14 +87,45 @@ public class UserController {
 
 	@RequestMapping(value = "/confirmEmail/{email}/{bookId}/{libraryId}", method = RequestMethod.GET)
 	public String confirmEmail(HttpSession session, Map<String, Object> params, @PathVariable("email") String email,
-	    @PathVariable("bookId") BigDecimal bookId, @PathVariable("libraryId") BigDecimal libraryId)
-	        throws UserNameExistsException, UserEmailExistsException {
-		UserTo user = new UserTo(null, "", "", email, new HashSet<>());
-		user = userService.createNewUserWithNameLikeId(user);
+	    @PathVariable("bookId") BigDecimal bookId, @PathVariable("libraryId") BigDecimal libraryId) {
+		UserTo user = userService.findUserEqualToEmail(email);
+		if(user == null) {
+			user = new UserTo(null, email, "pass", email, new HashSet<>());
+			try {
+				user = userService.createNewUser(user);
+			} catch (UserNameExistsException | UserEmailExistsException e) {
+				String error = (String) params.get("error");
+				params.put("error", appendToMsg(error, "Podany adres email już istnieje w bazie danych."));
+			} 
+		}
+	
 		final BookTo book = bookService.findBookById(bookId);
 		final LibraryTo library = libraryService.findLibraryById(libraryId);
+		
+		try {
+			user = userService.rentUserABook(user, book, library);
+		} catch (BookAlreadyRentException e) {
+			String error = (String) params.get("error");
+			params.put("error", appendToMsg(error, "Już wypożyczono tą książkę na ten adres email."));
+		} catch (BookNotAvailableException e) {
+			String error = (String) params.get("error");
+			params.put("error", appendToMsg(error, "Książka jest już niedostępna."));
+		}
 		OrderForm order = new OrderForm(user, book, library);
-		return confirmOrder(session, order, params, bookId, libraryId);
+		
+		params.put("emailConfirmed", true);
+		params.put("order", order);
+		return "confirmOrder";
+	}
+	
+	private String appendToMsg(String msg, String text) {
+		if(msg != null) {
+			msg += "<br />";
+		} else {
+			msg = new String();
+		}
+		msg += text;
+		return msg;
 	}
 
 	private String successUrl = "http://localhost:9721/book-rental/confirmEmail";
@@ -92,7 +140,7 @@ public class UserController {
 				message.setSubject("Book-Rental: potwierdź wypożyczenie");
 				String url = successUrl + "/" + email + "/" + book.getId() + "/" + library.getId();
 				message.setContent("<p>Jeśli to ty wypożyczyłeś książkę <b>" + book.getTitle() + "</b> w bibliotece <b>"
-		        + library.getName() + "</b> kliknij proszę w poniższy link.<br /><br /><a href=\"" + url + "\">url</a>",
+		        + library.getName() + "</b> kliknij proszę w poniższy link.<br /><br /><a href=\"" + url + "\">" + url + "</a>",
 		        "text/html");
 			}
 		};
@@ -114,7 +162,7 @@ public class UserController {
 		} else {
 			session.setAttribute("user", user);
 		}
-		return "home";
+		return "signIn";
 	}
 
 	@RequestMapping(value = "/logout")

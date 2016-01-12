@@ -65,7 +65,7 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		checkIfArgumentIsNull(library, "library");
 
 		final UserBookLibraryEntity userBookLibrary = new UserBookLibraryEntity(user, book, library);
-		if (user.getBooks().contains(userBookLibrary)) {
+		if (user.getBooks().contains(userBookLibrary))  {
 			throw new BookAlreadyRentException();
 		}
 
@@ -115,22 +115,6 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		return user;
 	}
 
-	@Override
-	public UserEntity createNewUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
-		checkIfArgumentIsNull(user, "user");
-		checkUserBeforeSave(user);
-		return save(user);
-	}
-
-	@Override
-	public UserEntity createNewUserWithNameLikeId(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
-		checkIfArgumentIsNull(user, "user");
-		checkUserBeforeSave(user);
-		user = save(user);
-		user.setName(user.getId().toBigInteger().toString());
-		return user;
-	}
-	
 	private void checkUserBeforeSave(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
 		prepareQueryVariables();
 		
@@ -151,10 +135,39 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 	}
 	
 	@Override
-	public UserEntity updateUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
+	public UserEntity createNewUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException {
 		checkIfArgumentIsNull(user, "user");
 		checkUserBeforeSave(user);
+		return save(user);
+	}
+
+	@Override
+	public UserEntity createNewUserWithNameLikeId(UserEntity user) {
+		checkIfArgumentIsNull(user, "user");
+		try {
+			checkUserBeforeSave(user);
+			
+			user = save(user);
+			user.setName(user.getId().toBigInteger().toString());
+			user = update(user);
+			System.out.println(user.toString());
+		} catch(UserNameExistsException | UserEmailExistsException e) {
+			// nothing to do here
+		}
+		return user;
+	}
+	
+	@Override
+	public UserEntity updateUser(UserEntity user) {
+		checkIfArgumentIsNull(user, "user");
 		return update(user);
+	}
+
+	@Override
+	public UserEntity findUserEqualToEmail(String email) {
+		checkIfArgumentIsNull(email, "email");
+		prepareQueryVariables();
+		return query.from(qEntity).where(qEntity.email.eq(email)).singleResult(qEntity);
 	}
 
 }

@@ -50,9 +50,9 @@
           </td>
           <td>
             <span th:each="library : ${book.libraries}">
-	            <span class="badge"><span th:text="${library.quantity}">quantity</span> szt.</span>
+	            <span th:unless="${library.quantity} le 0"><span class="badge"><span th:text="${library.quantity}">quantity</span> szt.</span>
 	            <span th:text="${library.library.name}">libraryName</span>
-	            <br />
+	            <br /></span>
             </span>
           </td>
           <td>

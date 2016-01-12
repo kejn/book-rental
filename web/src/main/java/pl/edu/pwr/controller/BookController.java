@@ -50,7 +50,7 @@ public class BookController {
 		for (BookTo book: books) {
 			libraries.addAll(book.getLibraries().stream().map(l -> l.getLibrary()).collect(Collectors.toSet()));
 		}
-		return libraries.stream().collect(Collectors.toList());
+		return libraries.stream().unordered().distinct().collect(Collectors.toList());
 	}
 
 	@RequestMapping(value = "/books/rent/{bookId}", method = RequestMethod.GET)
