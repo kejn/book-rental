@@ -69,7 +69,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserTo findUserEqualToEmail(String email) {
-		return userMapper.map2To(userDao.findUserEqualToEmail(email));
+		UserEntity user = userDao.findUserEqualToEmail(email);
+		return (user == null) ? null : userMapper.map2To(user);
 	}
 
 	@Override

@@ -47,6 +47,7 @@ public class UserController {
 	JavaMailSender mailSender;
 
 	private final String mailFrom = "no-reply@book-rental.com";
+	private String successUrl = "http://localhost:9721/book-rental/confirmEmail";
 
 	@RequestMapping(value = "/confirmOrder/{bookId}/{libraryId}", method = RequestMethod.POST)
 	public String confirmOrder(HttpSession session, @ModelAttribute("order") OrderForm order, Map<String, Object> params,
@@ -68,15 +69,15 @@ public class UserController {
 				params.put("error", appendToMsg(error, "Książka jest już niedostępna."));
 			}
 			order.setUser(user);
-			
+
 		} else {
-			user = userService.findUserEqualToEmail(order.getUser().getEmail()); 
-			if(user != null) {
+			user = userService.findUserEqualToEmail(order.getUser().getEmail());
+			if (user != null) {
 				params.put("error", "Podany adres email już istnieje w bazie danych.");
 			}
 			try {
 				mailSender.send(createMessage(order.getUser().getEmail(), book, library));
-			} catch(MailException e) {
+			} catch (MailException e) {
 				String error = (String) params.get("error");
 				params.put("error", appendToMsg(error, e.getMessage()));
 			}
@@ -89,19 +90,19 @@ public class UserController {
 	public String confirmEmail(HttpSession session, Map<String, Object> params, @PathVariable("email") String email,
 	    @PathVariable("bookId") BigDecimal bookId, @PathVariable("libraryId") BigDecimal libraryId) {
 		UserTo user = userService.findUserEqualToEmail(email);
-		if(user == null) {
+		if (user == null) {
 			user = new UserTo(null, email, "pass", email, new HashSet<>());
 			try {
 				user = userService.createNewUser(user);
 			} catch (UserNameExistsException | UserEmailExistsException e) {
 				String error = (String) params.get("error");
 				params.put("error", appendToMsg(error, "Podany adres email już istnieje w bazie danych."));
-			} 
+			}
 		}
-	
+
 		final BookTo book = bookService.findBookById(bookId);
 		final LibraryTo library = libraryService.findLibraryById(libraryId);
-		
+
 		try {
 			user = userService.rentUserABook(user, book, library);
 		} catch (BookAlreadyRentException e) {
@@ -112,14 +113,14 @@ public class UserController {
 			params.put("error", appendToMsg(error, "Książka jest już niedostępna."));
 		}
 		OrderForm order = new OrderForm(user, book, library);
-		
+
 		params.put("emailConfirmed", true);
 		params.put("order", order);
 		return "confirmOrder";
 	}
-	
+
 	private String appendToMsg(String msg, String text) {
-		if(msg != null) {
+		if (msg != null) {
 			msg += "<br />";
 		} else {
 			msg = new String();
@@ -128,8 +129,6 @@ public class UserController {
 		return msg;
 	}
 
-	private String successUrl = "http://localhost:9721/book-rental/confirmEmail";
-
 	private MimeMessagePreparator createMessage(String email, BookTo book, LibraryTo library) {
 		MimeMessagePreparator messagePrep = new MimeMessagePreparator() {
 
@@ -137,11 +136,14 @@ public class UserController {
 			public void prepare(MimeMessage message) throws Exception {
 				message.setFrom(new InternetAddress(mailFrom));
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+				message.setHeader("Content-Type", "text/html; charset=UTF-8");
 				message.setSubject("Book-Rental: potwierdź wypożyczenie");
 				String url = successUrl + "/" + email + "/" + book.getId() + "/" + library.getId();
-				message.setContent("<p>Jeśli to ty wypożyczyłeś książkę <b>" + book.getTitle() + "</b> w bibliotece <b>"
-		        + library.getName() + "</b> kliknij proszę w poniższy link.<br /><br /><a href=\"" + url + "\">" + url + "</a>",
-		        "text/html");
+				message.setContent(
+		        "<p>Je\u015Bli to ty wypo\u017Cyczy\u0142e\u015B ksi\u0105\u017Ck\u0119 <b>" + book.getTitle()
+		            + "</b> w bibliotece <b>" + library.getName()
+		            + "</b> kliknij prosz\u0119 w poni\u017Cszy link.<br /><br /><a href=\"" + url + "\">" + url + "</a>",
+		        "text/html; charset=UTF-8");
 			}
 		};
 		return messagePrep;
@@ -164,7 +166,7 @@ public class UserController {
 		}
 		return "signIn";
 	}
-	
+
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String register(Map<String, Object> params) {
 		UserTo user = new UserTo();
@@ -190,7 +192,7 @@ public class UserController {
 		}
 		return "signIn";
 	}
-	
+
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("user");
