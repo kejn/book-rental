@@ -30,4 +30,6 @@ public interface UserService {
 
 	public UserTo findUserEqualToEmail(String email);
 
+	public UserTo findUserEqualToEmailOrName(String email, String name);
+
 }

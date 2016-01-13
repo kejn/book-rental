@@ -170,4 +170,16 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		return query.from(qEntity).where(qEntity.email.eq(email)).singleResult(qEntity);
 	}
 
+	@Override
+	public UserEntity findUserEqualToEmailOrName(String email, String name) {
+		checkIfArgumentIsNull(email, "email");
+		checkIfArgumentIsNull(name, "name");
+		prepareQueryVariables();
+
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.or(qEntity.name.eq(name));
+		builder.or(qEntity.email.eq(email));
+		return query.from(qEntity).where(builder).singleResult(qEntity);
+	}
+
 }

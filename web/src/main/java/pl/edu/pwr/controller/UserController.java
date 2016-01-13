@@ -164,7 +164,33 @@ public class UserController {
 		}
 		return "signIn";
 	}
+	
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public String register(Map<String, Object> params) {
+		UserTo user = new UserTo();
+		params.put("user", user);
+		return "register";
+	}
 
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public String registerPost(HttpSession session, @ModelAttribute("user") UserTo user, Map<String, Object> params) {
+		params.put("user", user);
+		user = userService.findUserEqualToEmailOrName(user.getEmail(), user.getName());
+		if (user != null) {
+			params.put("error", "Istnieje już konto dla podanego adresu email lub nazwy użytkownika.");
+			return "register";
+		} else {
+			try {
+				user = userService.createNewUser((UserTo) params.get("user"));
+				session.setAttribute("user", user);
+			} catch (UserNameExistsException | UserEmailExistsException e) {
+				params.put("error", "Istnieje już konto dla podanego adresu email lub nazwy użytkownika.");
+				return "register";
+			}
+		}
+		return "signIn";
+	}
+	
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("user");

@@ -81,4 +81,6 @@ public interface UserDao extends Dao<UserEntity, BigDecimal> {
 
 	public UserEntity findUserEqualToEmail(String email);
 
+	public UserEntity findUserEqualToEmailOrName(String email, String name);
+
 }

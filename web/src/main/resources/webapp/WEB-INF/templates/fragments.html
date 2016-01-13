@@ -29,7 +29,7 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Rejestracja</a></li>
+            <li id="registerHyperlink" th:unless="${session.user}"><a th:href="@{/register}"><span class="glyphicon glyphicon-user"></span> Rejestracja</a></li>
             <li id="signInHyperlink" th:unless="${session.user}"><a th:href="@{/signIn}"><span class="glyphicon glyphicon-log-in"></span> Logowanie</a></li>
             <li id="logoutHyperlink" th:if="${session.user}"><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-in"></span> Wyloguj</a></li>
           </ul>
