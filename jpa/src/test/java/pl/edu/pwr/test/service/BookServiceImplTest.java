@@ -45,7 +45,7 @@ public class BookServiceImplTest {
 		AuthorEntity author2 = new AuthorEntity(new BigDecimal("2"), "Jan", "Brzechwa");
 
 		LibraryEntity library = new LibraryEntity(new BigDecimal("1"), "Biblioteka we Wrocławiu");
-		
+
 		BookEntity book = new BookEntity(new BigDecimal("1"), "Pierwsza książka");
 		book.addAuthors(author1, author2);
 		book.addLibrary(library, 1);
@@ -67,6 +67,19 @@ public class BookServiceImplTest {
 		// then
 		assertNotNull(books);
 		assertFalse(books.isEmpty());
+	}
+
+	@Test
+	public void shouldFindBookById() {
+		// given
+		final BigDecimal id = BigDecimal.ONE;
+		// when
+		Mockito.when(bookDao.findOne(Mockito.any(BigDecimal.class))).thenReturn(bookEntityMock());
+		BookTo book = bookService.findBookById(id);
+		// then
+		ArgumentCaptor<BigDecimal> captor = ArgumentCaptor.forClass(BigDecimal.class);
+		Mockito.verify(bookDao).findOne(captor.capture());
+		assertNotNull(book);
 	}
 
 	@Test
@@ -132,5 +145,53 @@ public class BookServiceImplTest {
 		Mockito.verify(bookDao).save(captor.capture());
 		assertNotNull(captor.getValue().getId());
 		assertEquals(obtainedId, captor.getValue().getId());
+	}
+
+	@Test
+	public void shouldFindBookByTitleUsingTitleAuthorLibrary() {
+		// given
+		final String title = "pierwsza";
+		// when
+		Mockito.when(bookDao.findBooksByTitleAuthorLibrary(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+		    .thenReturn(Arrays.asList(bookEntityMock()));
+	  final List<BookTo> books = bookService.findBooksByTitleAuthorLibrary(title, "", "");
+	  // then
+	  ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+	  Mockito.verify(bookDao).findBooksByTitleAuthorLibrary(captor.capture(), captor.capture(), captor.capture());
+	  assertNotNull(books);
+	  assertFalse(books.isEmpty());
+	  assertEquals(title, captor.getAllValues().get(0));
+	}
+
+	@Test
+	public void shouldFindBookByAuthorUsingTitleAuthorLibrary() {
+		// given
+		final String author = "kowalski";
+		// when
+		Mockito.when(bookDao.findBooksByTitleAuthorLibrary(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+		.thenReturn(Arrays.asList(bookEntityMock()));
+		final List<BookTo> books = bookService.findBooksByTitleAuthorLibrary("", author, "");
+		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(bookDao).findBooksByTitleAuthorLibrary(captor.capture(), captor.capture(), captor.capture());
+		assertNotNull(books);
+		assertFalse(books.isEmpty());
+		assertEquals(author, captor.getAllValues().get(1));
+	}
+
+	@Test
+	public void shouldFindBookByLibraryUsingTitleAuthorLibrary() {
+		// given
+		final String libraryName = "wrocław";
+		// when
+		Mockito.when(bookDao.findBooksByTitleAuthorLibrary(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+		.thenReturn(Arrays.asList(bookEntityMock()));
+		final List<BookTo> books = bookService.findBooksByTitleAuthorLibrary("", "", libraryName);
+		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(bookDao).findBooksByTitleAuthorLibrary(captor.capture(), captor.capture(), captor.capture());
+		assertNotNull(books);
+		assertFalse(books.isEmpty());
+		assertEquals(libraryName, captor.getAllValues().get(2));
 	}
 }

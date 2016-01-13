@@ -226,7 +226,7 @@ public class UserDaoImplTest {
 	@Test(expected = BookNotRentException.class)
 	public void userCantReturnNotRentBookToLibrary() throws BookNotRentException {
 		// given
-		final BigDecimal bookId = new BigDecimal("2");
+		final BigDecimal bookId = new BigDecimal("1");
 		final BigDecimal libraryId = new BigDecimal("3");
 		final BigDecimal userId = new BigDecimal("2");
 		final BookLibraryEntityId bookLibraryId = new BookLibraryEntityId(bookId, libraryId);
@@ -296,5 +296,38 @@ public class UserDaoImplTest {
 			fail(e.getMessage());
 		}
 
+	}
+	
+	@Test
+	public void shouldFindUserByEmail() {
+		// given
+		final String email = "test1@book-rental.com";
+		// when
+		final UserEntity user = userDao.findUserEqualToEmail(email);
+		// then
+		assertNotNull(user);
+		assertEquals(email, user.getEmail());
+	}
+
+	@Test
+	public void shouldFindUserByEmailEqualToEmailOrName() {
+		// given
+		final String email = "test1@book-rental.com";
+		// when
+		final UserEntity user = userDao.findUserEqualToEmailOrName(email, null);
+		// then
+		assertNotNull(user);
+		assertEquals(email, user.getEmail());
+	}
+
+	@Test
+	public void shouldFindUserByNameEqualToEmailOrName() {
+		// given
+		final String userName = "user";
+		// when
+		final UserEntity user = userDao.findUserEqualToEmailOrName("", userName);
+		// then
+		assertNotNull(user);
+		assertEquals(userName, user.getName());
 	}
 }

@@ -53,6 +53,19 @@ public class LibraryServiceImplTestTest {
 	}
 	
 	@Test
+	public void shouldFindLibraryById() {
+		// given
+		final BigDecimal id = BigDecimal.ONE;
+		// when
+		Mockito.when(libraryDao.findOne(Mockito.any(BigDecimal.class))).thenReturn(libraryMock);
+		LibraryTo library = libraryService.findLibraryById(id);
+		// then
+		ArgumentCaptor<BigDecimal> captor = ArgumentCaptor.forClass(BigDecimal.class);
+		Mockito.verify(libraryDao).findOne(captor.capture());
+		assertNotNull(library);
+	}
+	
+	@Test
 	public void shouldFindLibraryByName() {
 		// given
 		final String libraryName = "we wrocławiu";

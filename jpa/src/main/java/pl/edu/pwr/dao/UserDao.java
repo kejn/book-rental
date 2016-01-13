@@ -75,12 +75,26 @@ public interface UserDao extends Dao<UserEntity, BigDecimal> {
 	 */
 	public UserEntity createNewUser(UserEntity user) throws UserNameExistsException, UserEmailExistsException;
 
-	public UserEntity updateUser(UserEntity user);
-
-	UserEntity createNewUserWithNameLikeId(UserEntity user);
-
+	/**
+	 * Searches database for user matching given email.
+	 * 
+	 * @param email
+	 *          user's email
+	 * @return user entity found in database matching above criteria or
+	 *         <b>null</b> otherwise.
+	 */
 	public UserEntity findUserEqualToEmail(String email);
 
+	/**
+	 * Searches database for user matching given email or name.
+	 * 
+	 * @param email
+	 *          user's email
+	 * @param name
+	 *          user's name
+	 * @return user entity found in database matching above criteria or
+	 *         <b>null</b> otherwise.
+	 */
 	public UserEntity findUserEqualToEmailOrName(String email, String name);
 
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mysema.query.BooleanBuilder;
+import com.mysema.query.types.Predicate;
 
 import pl.edu.pwr.dao.BookDao;
 import pl.edu.pwr.dao.BookLibraryDao;
@@ -14,8 +15,6 @@ import pl.edu.pwr.dao.LibraryDao;
 import pl.edu.pwr.dao.UserBookLibraryDao;
 import pl.edu.pwr.dao.UserDao;
 import pl.edu.pwr.entity.BookEntity;
-import pl.edu.pwr.entity.BookLibraryEntity;
-import pl.edu.pwr.entity.BookLibraryEntityId;
 import pl.edu.pwr.entity.LibraryEntity;
 import pl.edu.pwr.entity.QUserEntity;
 import pl.edu.pwr.entity.UserBookLibraryEntity;
@@ -26,6 +25,7 @@ import pl.edu.pwr.exception.BookNotAvailableException;
 import pl.edu.pwr.exception.BookNotRentException;
 import pl.edu.pwr.exception.UserEmailExistsException;
 import pl.edu.pwr.exception.UserNameExistsException;
+import pl.edu.pwr.tool.StringCheck;
 
 @Component
 public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal> implements UserDao {
@@ -47,12 +47,20 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		qEntity = QUserEntity.userEntity;
 	}
 
+	private Predicate conditionNameEqualsIgnoreCase(String userName) {
+		return qEntity.name.equalsIgnoreCase(userName);
+	}
+
+	private Predicate conditionEmailEquals(String email) {
+		return qEntity.email.eq(email);
+	}
+	
 	@Override
 	public UserEntity findUserEqualToNameVerifyPassword(String userName, String password) {
 		checkIfArgumentIsNull(userName, "userName");
 		prepareQueryVariables();
 		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(qEntity.name.equalsIgnoreCase(userName));
+		builder.and(conditionNameEqualsIgnoreCase(userName));
 		builder.and(qEntity.password.eq(password));
 		return query.from(qEntity).where(builder).singleResult(qEntity);
 	}
@@ -69,12 +77,6 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 			throw new BookAlreadyRentException();
 		}
 
-		final BookLibraryEntityId id = new BookLibraryEntityId(book, library);
-		final BookLibraryEntity bookLibraryEntity = bookLibraryDao.findOne(id);
-
-		if (!bookLibraryEntity.isBookAvailable()) {
-			throw new BookNotAvailableException();
-		}
 		bookLibraryDao.removeBookFromLibrary(book, library);
 		
 		book = bookDao.update(book);
@@ -99,18 +101,11 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		if (userBookLibrary == null) {
 			throw new BookNotRentException();
 		}
-		
+				
 		bookLibraryDao.addBookToLibrary(book, library);
 		userBookLibraryDao.delete(userBookLibrary);
 		
-		for(UserBookLibraryEntity ubl : user.getBooks()) {
-			System.out.println("\n\nin\n" + ubl.toString() + "\n\n\n");
-		}
-		System.out.println("\n\nwas\n" + userBookLibrary.toString() + "\n\n\n");
-		
-		if(!user.removeBook(userBookLibrary)) {
-			return null;
-		}
+		user.removeBook(userBookLibrary);
 		user = update(user);
 		return user;
 	}
@@ -119,8 +114,8 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 		prepareQueryVariables();
 		
 		BooleanBuilder builder = new BooleanBuilder();
-		builder.or(qEntity.name.eq(user.getName()));
-		builder.or(qEntity.email.eq(user.getEmail()));
+		builder.or(conditionNameEqualsIgnoreCase(user.getName()));
+		builder.or(conditionEmailEquals(user.getEmail()));
 		
 		List<UserEntity> userCheck = query.from(qEntity).where(builder).list(qEntity); 
 		
@@ -142,43 +137,23 @@ public class UserDaoImpl extends AbstractDao<UserEntity, QUserEntity, BigDecimal
 	}
 
 	@Override
-	public UserEntity createNewUserWithNameLikeId(UserEntity user) {
-		checkIfArgumentIsNull(user, "user");
-		try {
-			checkUserBeforeSave(user);
-			
-			user = save(user);
-			user.setName(user.getId().toBigInteger().toString());
-			user = update(user);
-			System.out.println(user.toString());
-		} catch(UserNameExistsException | UserEmailExistsException e) {
-			// nothing to do here
-		}
-		return user;
-	}
-	
-	@Override
-	public UserEntity updateUser(UserEntity user) {
-		checkIfArgumentIsNull(user, "user");
-		return update(user);
-	}
-
-	@Override
 	public UserEntity findUserEqualToEmail(String email) {
 		checkIfArgumentIsNull(email, "email");
 		prepareQueryVariables();
-		return query.from(qEntity).where(qEntity.email.eq(email)).singleResult(qEntity);
+		return query.from(qEntity).where(conditionEmailEquals(email)).singleResult(qEntity);
 	}
 
 	@Override
 	public UserEntity findUserEqualToEmailOrName(String email, String name) {
-		checkIfArgumentIsNull(email, "email");
-		checkIfArgumentIsNull(name, "name");
 		prepareQueryVariables();
 
 		BooleanBuilder builder = new BooleanBuilder();
-		builder.or(qEntity.name.eq(name));
-		builder.or(qEntity.email.eq(email));
+		if(!StringCheck.stringIsNullOrEmpty(email)) {
+			builder.or(qEntity.email.eq(email));
+		}
+		if(!StringCheck.stringIsNullOrEmpty(name)) {
+			builder.or(qEntity.name.eq(name));
+		}
 		return query.from(qEntity).where(builder).singleResult(qEntity);
 	}
 

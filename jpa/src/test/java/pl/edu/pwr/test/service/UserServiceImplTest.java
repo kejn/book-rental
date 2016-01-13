@@ -102,7 +102,7 @@ public class UserServiceImplTest {
 		final String password = "password";
 		// when
 		Mockito.when(userDao.findUserEqualToNameVerifyPassword(Mockito.anyString(), Mockito.anyString()))
-		    .thenReturn(this.userEntityMock(null, null));
+		    .thenReturn(userEntityMock(null, null));
 		UserTo user = userService.findUserEqualToNameVerifyPassword(userName, password);
 		// then
 		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
@@ -191,7 +191,8 @@ public class UserServiceImplTest {
 	}
 
 	/**
-	 * userMockBefore.id is not set to null to verify method call (method 'equals' compares arguments so )
+	 * userMockBefore.id is not set to null to verify method call (method 'equals'
+	 * compares arguments so )
 	 */
 	@Test
 	public void shouldCreateNewUser() throws UserNameExistsException, UserEmailExistsException {
@@ -216,6 +217,83 @@ public class UserServiceImplTest {
 		assertNotNull(userToCreate);
 		assertNotNull(captor.getValue().getId());
 		assertEquals(obtainedId, captor.getValue().getId());
+	}
+
+	@Test
+	public void shouldFindUserEqualToEmail() {
+		// given
+		final String email = "email@domain.com";
+		final LibraryEntity library = libraryEntityMock();
+		final BookEntity book = bookEntityMock(library);
+		// when
+		Mockito.when(userDao.findUserEqualToEmail(Mockito.anyString())).thenReturn(userEntityMock(book, library));
+		UserTo user = userService.findUserEqualToEmail(email);
+		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(userDao).findUserEqualToEmail(captor.capture());
+		assertNotNull(user);
+		assertEquals(email, captor.getValue());
+	}
+
+	@Test
+	public void shouldNotFindUserEqualToEmail() {
+		// given
+		final String email = "email@domain.com";
+		// when
+		Mockito.when(userDao.findUserEqualToEmail(Mockito.anyString())).thenReturn(null);
+		UserTo user = userService.findUserEqualToEmail(email);
+		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(userDao).findUserEqualToEmail(captor.capture());
+		assertTrue(user == null);
+	}
+
+	@Test
+	public void shouldFindUserEqualToEmailUsingEmailOrName() {
+		// given
+		final String email = "email@domain.com";
+		final LibraryEntity library = libraryEntityMock();
+		final BookEntity book = bookEntityMock(library);
+		// when
+		Mockito.when(userDao.findUserEqualToEmailOrName(Mockito.anyString(), Mockito.anyString()))
+		    .thenReturn(userEntityMock(book, library));
+		UserTo user = userService.findUserEqualToEmailOrName(email, "");
+		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(userDao).findUserEqualToEmailOrName(captor.capture(), captor.capture());
+		assertNotNull(user);
+		assertEquals(email, captor.getAllValues().get(0));
+	}
+
+	@Test
+	public void shouldFindUserEqualToNameUsingEmailOrName() {
+		// given
+		final String name = "user";
+		final LibraryEntity library = libraryEntityMock();
+		final BookEntity book = bookEntityMock(library);
+		// when
+		Mockito.when(userDao.findUserEqualToEmailOrName(Mockito.anyString(), Mockito.anyString()))
+		.thenReturn(userEntityMock(book, library));
+		UserTo user = userService.findUserEqualToEmailOrName("", name);
+		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(userDao).findUserEqualToEmailOrName(captor.capture(), captor.capture());
+		assertNotNull(user);
+		assertEquals(name, captor.getAllValues().get(1));
+	}
+
+	@Test
+	public void shouldNotFindUserEqualToNameUsingEmailOrName() {
+		// given
+		final String name = "user3";
+		// when
+		Mockito.when(userDao.findUserEqualToEmailOrName(Mockito.anyString(), Mockito.anyString()))
+		.thenReturn(null);
+		UserTo user = userService.findUserEqualToEmailOrName("", name);
+		// then
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(userDao).findUserEqualToEmailOrName(captor.capture(), captor.capture());
+		assertTrue(user == null);
 	}
 
 }

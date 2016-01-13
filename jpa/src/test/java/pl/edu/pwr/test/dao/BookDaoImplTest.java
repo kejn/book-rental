@@ -151,5 +151,41 @@ public class BookDaoImplTest {
 		final Set<BookLibraryEntity> libraryToValidate = bookToValidate.getLibraries();
 		assertTrue(libraryToValidate.stream().anyMatch(l -> l.getLibrary().getName().equals("Biblioteka we Wrocławiu")));
 	}
+	
+	@Test
+	public void shouldFindBooksByTitleUsingBookAuthorLibraryCriteria() {
+		// given
+		final String bookTitle = "pierwsza";
+		// when
+		List<BookEntity> books = new ArrayList<>(bookDao.findBooksByTitleAuthorLibrary(bookTitle, null, null));
+		// then
+		assertNotNull(books);
+		assertFalse(books.isEmpty());
+		assertEquals("Pierwsza książka", books.get(0).getTitle());
+	}
+
+	@Test
+	public void shouldFindBooksByAuthorUsingBookAuthorLibraryCriteria() {
+		// given
+		final String bookAuthor = "jan";
+		// when
+		List<BookEntity> books = new ArrayList<>(bookDao.findBooksByTitleAuthorLibrary(null, bookAuthor, null));
+		// then
+		assertNotNull(books);
+		assertFalse(books.isEmpty());
+		assertTrue(books.get(0).getAuthors().stream().anyMatch(a -> a.stringValue().equals("Jan Kowalski")));
+	}
+
+	@Test
+	public void shouldFindBooksByLibraryUsingBookAuthorLibraryCriteria() {
+		// given
+		final String libraryName = "wrocław";
+		// when
+		List<BookEntity> books = new ArrayList<>(bookDao.findBooksByTitleAuthorLibrary("", null, libraryName));
+		// then
+		assertNotNull(books);
+		assertFalse(books.isEmpty());
+		assertTrue(books.get(0).getLibraries().stream().anyMatch(l -> l.getLibrary().getName().equals("Biblioteka we Wrocławiu")));
+	}
 
 }
