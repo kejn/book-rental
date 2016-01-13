@@ -73,7 +73,9 @@ public class UserController {
 		} else {
 			user = userService.findUserEqualToEmail(order.getUser().getEmail());
 			if (user != null) {
-				params.put("error", "Podany adres email już istnieje w bazie danych.");
+				if(!user.getBooks().isEmpty()) {
+					params.put("error", "Na podany adres email już wypożyczono jedną książkę.");
+				}
 			}
 			try {
 				mailSender.send(createMessage(order.getUser().getEmail(), book, library));

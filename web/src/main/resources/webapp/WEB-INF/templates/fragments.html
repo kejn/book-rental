@@ -58,12 +58,12 @@
     });
     </script>
     <div class="container" style="margin-bottom: 20px;">
-      <form class="form-inline">
+      <form name="search" class="form-inline">
         <div class="form-group form-group-sm" th:with="titleX = ${bookTitle} == null or ${bookTitle} == ''">
           <label for="bookTitle">Tytuł książki:</label>
-          <input id="bookTitle" type="text" name="bookTitle" th:value="${bookTitle}" th:if="${titleX}" class="form-control" />
+          <input id="bookTitle" th:type="${titleX} ? 'text' : 'hidden'" name="bookTitle" th:value="${bookTitle}" class="form-control" />
           <span th:unless="${titleX}">
-            <button id="clearTitle" class="btn btn-xs btn-danger">
+            <button type="button" id="clearTitle" class="btn btn-xs btn-danger">
               <span th:text="${bookTitle}"></span>
               <span class="glyphicon glyphicon-remove"></span>
             </button>
@@ -71,9 +71,9 @@
         </div>
         <div class="form-group  form-group-sm" th:with="authX = ${bookAuthor} == null or ${bookAuthor} == ''">
           <label for="bookAuthor">Autor:</label>
-          <input id="bookAuthor" type="text" name="bookAuthor" th:value="${bookAuthor}" th:if="${authX}" class="form-control" />
+          <input id="bookAuthor" th:type="${authX} ? 'text' : 'hidden'" name="bookAuthor" th:value="${bookAuthor}" class="form-control" />
           <span th:unless="${authX}">
-            <button id="clearAuthor" class="btn btn-xs btn-danger">
+            <button type="button" id="clearAuthor" class="btn btn-xs btn-danger">
               <span th:text="${bookAuthor}"></span>
               <span class="glyphicon glyphicon-remove"></span>
             </button>
@@ -86,12 +86,12 @@
             <option th:each="library : ${libraries}" th:text="${library.name}" th:value="${library.name}" th:selected="${bookLibrary} == ${library.name}" />
           </select>
           <span th:unless="${libX}">
-	          <button id="clearLibrary" class="btn btn-xs btn-danger">
+	          <button type="button" id="clearLibrary" class="btn btn-xs btn-danger">
 	            <span class="glyphicon glyphicon-remove"></span>
 	          </button>
           </span>
         </div>
-        <input type="submit" value="Szukaj" />
+        <button type="submit">Szukaj</button>
       </form>
     </div>
   </div>

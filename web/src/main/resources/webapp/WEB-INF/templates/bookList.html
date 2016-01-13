@@ -64,7 +64,7 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li class="dropdown-header">Wybierz bibliotekę</li>
-                  <li th:each="library : ${book.libraries}">
+                  <li th:each="library : ${book.libraries}" th:unless="${library.quantity} le 0">
                     <a href="#" th:text="${library.library.name}"></a>
                     <span th:text="${library.library.id}" hidden="true"></span>
                   </li>
